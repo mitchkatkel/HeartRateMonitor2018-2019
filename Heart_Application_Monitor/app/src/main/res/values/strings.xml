@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Heart Monitor</string>
-
-
     <string name="title_section1">Home</string>
     <string name="title_section2">User Settings</string>
     <string name="title_section3">Reports</string>
@@ -49,5 +47,6 @@
     <string name="device_selected">Heart Sensor:</string>
     <string name="store_reading">Store Reading</string>
     <string name="select_sensor">Please select sensor device</string>
+    <string name="files_stored">Stored ECG Recordings</string>
 
 </resources>

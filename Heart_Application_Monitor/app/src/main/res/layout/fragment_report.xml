@@ -1,10 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/report"
-    tools:context="edu.und.cs.com.heart_monitor.ReportFragment">
+    tools:context="edu.und.cs.com.heart_monitor.ReportFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/report_fragment"/>
-    </FrameLayout>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/txtView1"
+        android:text="@string/files_stored"
+        android:gravity="center_horizontal"
+        android:textSize="25dp"
+        android:textColor="#ff040404"
+        android:layout_marginBottom="15dp" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lstvECGFiles"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
+</LinearLayout>
