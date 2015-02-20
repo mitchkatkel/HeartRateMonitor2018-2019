@@ -1,5 +1,7 @@
 package edu.und.cs.com.heart_monitor;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -17,8 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -301,14 +307,48 @@ ViewPager mViewPager;
 
     }
 
-    public static class RFragment extends Fragment{
+    public static class RFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+        ListView reportsList;
+        File fileDir;
+        File[] filesList;
+        ArrayList<String> fileNames = new ArrayList();
+        FileHelper myFileHelper;
+        TextView txtView1;
+        ArrayAdapter myArrayAdapter;
+
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState){
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.fragment_report,container, false);
-
+            fileNames.clear();
+            myArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,android.R.id.text1, fileNames);
+            reportsList = (ListView) rootView.findViewById(R.id.lstvECGFiles);
+            reportsList.setOnItemClickListener(this);
+            reportsList.setOnItemLongClickListener(this);
+            fileDir = getActivity().getApplicationContext().getFilesDir();
+            filesList = fileDir.listFiles();
+            if(filesList != null){
+                for(File file : filesList){
+                    String name = file.getName();
+                    fileNames.add(name);
+                }
+            }
+            reportsList.setAdapter(myArrayAdapter);
             return rootView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        }
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            getActivity().getApplicationContext().deleteFile(fileNames.get(position));
+            ((BaseAdapter)reportsList.getAdapter()).notifyDataSetChanged();
+            fileNames.remove(position);
+            myArrayAdapter.notifyDataSetChanged();
+            return false;
         }
     }
 
