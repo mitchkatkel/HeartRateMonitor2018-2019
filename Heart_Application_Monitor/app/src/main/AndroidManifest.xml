@@ -35,6 +35,10 @@
             android:name=".UserData"
             android:label="@string/title_activity_user_data" >
         </activity>
+        <activity
+            android:name=".ViewRecording"
+            android:label="@string/title_activity_view_recording" >
+        </activity>
     </application>
 
 </manifest>

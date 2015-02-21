@@ -1,9 +1,17 @@
 package edu.und.cs.com.heart_monitor;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -32,16 +40,45 @@ public class FileHelper {
         return 0;
     }
 
-    public boolean deleteFile(String fileName, Context ctx) {
-        boolean deleted = false;
+    public ArrayList loadFile(String fileName, Context ctx) {
+        int xValue = 0;
+        int yValue = 0;
+        String nextNum = "";
+        ArrayList<Integer> myFileInfo = new ArrayList<>();
+        StringBuffer fileContent = new StringBuffer("");
+        FileInputStream fis;
         try {
-            ctx.deleteFile(fileName);
-            deleted = true;
-        }catch(Exception e){
-
+            fis = ctx.openFileInput( fileName );
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            try {
+                String line;
+                int lineCount = 0;
+                while ((line = reader.readLine()) != null) {
+                    String[] RowData = line.split(",");
+                    if(lineCount == 0) RowData[0] = "0";
+                    xValue = Integer.parseInt(RowData[0]);
+                    yValue = Integer.parseInt(RowData[1]);
+                    lineCount++;
+                   myFileInfo.add(xValue);
+                   myFileInfo.add(yValue);
+                }
+            }
+            catch (IOException ex) {
+                // handle exception
+            }
+            finally {
+                try {
+                    fis.close();
+                }
+                catch (IOException e) {
+                    // handle exception
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
-        return deleted;
+        return myFileInfo;
     }
 
 }

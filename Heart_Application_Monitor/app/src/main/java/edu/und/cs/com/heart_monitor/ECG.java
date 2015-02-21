@@ -1,9 +1,11 @@
 package edu.und.cs.com.heart_monitor;
 
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +50,8 @@ public class ECG extends RoboActivity implements View.OnClickListener {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private boolean testInitiated = false;
     private AsyncTask myThread;
+    private int RSSI; //bluetooth signal strength
+    private String ecgReading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +122,8 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                     // toast.show();
                 }else if((runTest == false)&&(testFailed == false)&&(testInitiated == true)){
                     Toast.makeText(this, "Making new recording", Toast.LENGTH_LONG).show();
+                    FileHelper myhelper = new FileHelper();
+                    myhelper.writeFile(ecgReading, getApplicationContext());
                     //toast.setGravity(Gravity.TOP, Gravity.CENTER_HORIZONTAL, Gravity.CENTER_VERTICAL);
                     //toast.show();
                 }else if((runTest == false)&&(testFailed == true)&&(testInitiated == false)){
@@ -188,6 +194,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                     //long startTime = System.currentTimeMillis();
                     while (runTest) {
                         //final int numberOfSamplesToRead = 100;
+
                         BITalinoFrame[] frames = bitalino.read(8);//read(number of frames to read)
 
                         if (UPLOAD) {
@@ -233,6 +240,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 Toast.makeText(getApplicationContext(),"Unable to establish connection", Toast.LENGTH_LONG).show();
             }else {
                 signalValueSeries.appendData(new GraphViewData(currentFrameNumber / 8, currentValue), false, 200);
+                ecgReading += (currentFrameNumber / 8) + "," + currentValue + "\n";
                 //update graph with new data value "appendData((x value, y value), notsure?, max number of points on graph)"
                 myGraphView.redrawAll();
             }

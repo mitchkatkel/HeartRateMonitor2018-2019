@@ -339,7 +339,11 @@ ViewPager mViewPager;
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            Bundle myBundle = new Bundle();
+            myBundle.putString("fileName",fileNames.get(position));
+            Intent newIntent = new Intent(getActivity(),ViewRecording.class);
+            newIntent.putExtras(myBundle);
+            startActivity(newIntent);
         }
 
         @Override
