@@ -39,6 +39,36 @@ public class FileHelper {
         }
         return 0;
     }
+    public int calcFileSize(String fileName, Context ctx) {
+        int lineCount = 0;
+        StringBuffer fileContent = new StringBuffer("");
+        FileInputStream fis;
+        try {
+            fis = ctx.openFileInput( fileName );
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            try {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lineCount++;
+                }
+            }
+            catch (IOException ex) {
+                // handle exception
+            }
+            finally {
+                try {
+                    fis.close();
+                }
+                catch (IOException e) {
+                    // handle exception
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return lineCount;
+    }
+
 
     public ArrayList loadFile(String fileName, Context ctx) {
         int xValue = 0;

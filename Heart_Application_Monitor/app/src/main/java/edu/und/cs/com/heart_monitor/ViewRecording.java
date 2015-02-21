@@ -42,7 +42,7 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
         myGraphView.addSeries(dataValueSeries);
         myGraphView.setManualYAxisBounds(900, 200);
         lytGraphLayout.addView(myGraphView);
-
+        myGraphView.setViewPort(0,25);
         myGraphView.setScrollable(true);
 
 
@@ -62,7 +62,7 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
 
         myFileInfo = myFileHelper.loadFile(fileName, this);
         for(int i = 0; i < myFileInfo.size()/2; ++i){
-            dataValueSeries.appendData(new GraphView.GraphViewData(myFileInfo.get(i), myFileInfo.get(++i)), false, 200);
+            dataValueSeries.appendData(new GraphView.GraphViewData(myFileInfo.get(i), myFileInfo.get(++i)), false, 10000);
         }
         myGraphView.redrawAll();
 /*

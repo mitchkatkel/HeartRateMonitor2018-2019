@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".SplashScreen"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,22 +22,27 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Test"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_test" >
         </activity>
         <activity
             android:name=".ECG"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_ecg" >
         </activity>
         <activity
             android:name=".UserData"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_user_data" >
         </activity>
         <activity
             android:name=".ViewRecording"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_view_recording" >
         </activity>
     </application>

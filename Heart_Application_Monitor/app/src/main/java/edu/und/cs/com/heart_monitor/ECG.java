@@ -241,6 +241,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
             }else {
                 signalValueSeries.appendData(new GraphViewData(currentFrameNumber / 8, currentValue), false, 200);
                 ecgReading += (currentFrameNumber / 8) + "," + currentValue + "\n";
+               // myGraphView.setViewPort((currentFrameNumber / 8),(currentFrameNumber / 8) + 25);
                 //update graph with new data value "appendData((x value, y value), notsure?, max number of points on graph)"
                 myGraphView.redrawAll();
             }
