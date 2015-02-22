@@ -36,7 +36,6 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -141,7 +140,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
 
 
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -178,7 +176,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             // Show 4 total pages.
             return 4;
         }
-
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -269,10 +266,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 }
 
             });
-
-
             return rootView;
-
         }
 
         @Override
@@ -300,10 +294,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         File fileDir;
         File[] filesList;
         ArrayList<String> fileNames = new ArrayList();
-        FileHelper myFileHelper;
-        TextView txtView1;
         ArrayAdapter myArrayAdapter;
-
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
