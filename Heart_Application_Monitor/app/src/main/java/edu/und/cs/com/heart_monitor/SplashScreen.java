@@ -1,29 +1,53 @@
 package edu.und.cs.com.heart_monitor;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.content.SharedPreferences;
+import android.widget.Toast;
 
 
 public class SplashScreen extends ActionBarActivity {
     static final int TIMER = 3000;
+    final int mode = Activity.MODE_APPEND;
+    final String file_settings = "SettingsFile";
+    SharedPreferences mySettings;
+    SharedPreferences.Editor myEditor;
 
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                Intent i = new Intent(SplashScreen.this, MainActivity.class);
-                startActivity(i);
-                finish();
-            }
-        },TIMER);
+        mySettings = PreferenceManager.getDefaultSharedPreferences(this);
+        if(mySettings.getBoolean("first_time",true)){
+            myEditor = mySettings.edit();
+            myEditor.putBoolean("first_time",false);
+            myEditor.commit();
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    Intent i = new Intent(SplashScreen.this,PrefUser.class);
+                    startActivity(i);
+                    finish();
+                }
+            },TIMER);
+        }else{
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+            }, TIMER);
+        }
+
     }
 
     @Override

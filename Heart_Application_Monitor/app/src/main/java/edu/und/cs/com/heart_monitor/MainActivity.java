@@ -211,14 +211,8 @@ ViewPager mViewPager;
                         }
                     });
 
-                    // final FragmentTransaction trans = getFragmentManager().beginTransaction();
-  //                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                 //   trans.replace(R.id.home, UFragment.newInstance());
-                  //  trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                   // trans.addToBackStack(null);
-                   // trans.commit();
 
-                    return rootView;
+                   return rootView;
         }
 
 

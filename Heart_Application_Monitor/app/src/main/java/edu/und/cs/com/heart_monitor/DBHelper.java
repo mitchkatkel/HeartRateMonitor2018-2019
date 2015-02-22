@@ -1,4 +1,4 @@
-package edu.und.cs.sbrown.heart_application_monitor;
+package edu.und.cs.com.heart_monitor;
 
 import android.content.ContentValues;
 import android.content.Context;

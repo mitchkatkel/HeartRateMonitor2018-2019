@@ -49,5 +49,6 @@
     <string name="device_selected">Heart Sensor:</string>
     <string name="store_reading">Store Reading</string>
     <string name="select_sensor">Please select sensor device</string>
+    <string name="title_activity_pref_user">PrefUser</string>
 
 </resources>
