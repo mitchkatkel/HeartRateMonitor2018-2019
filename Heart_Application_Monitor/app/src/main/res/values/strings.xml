@@ -50,13 +50,9 @@
     <string name="files_stored">Stored ECG Recordings</string>
     <string name="title_activity_view_recording">ViewRecording</string>
     <string name="home_screen_checklist">Pretest ECG Checklist</string>
-    <string name="home_screen_checklist_item1">1) Sensor is turned on</string>
-    <string name="home_screen_checklist_item2">2) Phone has been paired to sensor</string>
-    <string name="home_screen_checklist_item3">3) ECG leads are correctly connected</string>
-    <string name="home_screen_checklist_item4">4) You are sitting or laying comfortably</string>
-
-
-
-
+    <string name="home_screen_checklist_item1">1) Turn sensor on</string>
+    <string name="home_screen_checklist_item2">2) Pair phone with sensor</string>
+    <string name="home_screen_checklist_item3">3) Connect ECG leads</string>
+    <string name="home_screen_checklist_item4">4) Sit or lay down</string>
 
 </resources>

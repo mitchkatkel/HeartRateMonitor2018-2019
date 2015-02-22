@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -195,39 +200,22 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 
     public static class HmFragment extends Fragment {
-ViewPager mViewPager;
+        ViewPager mViewPager;
         Button btnUser;
-       public FragmentTransaction ft;
+        public FragmentTransaction ft;
         UFragment user = new UFragment();
-
-
-
         @Override
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                                 Bundle savedInstanceState){
-
+        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,Bundle savedInstanceState){
             final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
-            rootView.findViewById(R.id.btnECG)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), ECG.class);
-                            startActivity(intent);
-                        }
-                    });
-
-                    // final FragmentTransaction trans = getFragmentManager().beginTransaction();
-  //                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                 //   trans.replace(R.id.home, UFragment.newInstance());
-                  //  trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                   // trans.addToBackStack(null);
-                   // trans.commit();
-
-                    return rootView;
+            rootView.findViewById(R.id.btnECG).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), ECG.class);
+                    startActivity(intent);
+                }
+            });
+            return rootView;
         }
-
-
     }
 
     public static class UFragment extends Fragment{

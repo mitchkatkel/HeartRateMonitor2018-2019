@@ -13,84 +13,44 @@
         android:layout_height="196dp"
         android:layout_weight="0.24"
         android:id="@+id/graphLayout"
-        android:background="#ffffff"></LinearLayout>
+        android:background="#ffffff"
+        android:layout_marginTop="20dp"></LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="25dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Frame Number:"
-            android:id="@+id/textView1"
-            android:gravity="center_vertical" />
-
-        <TextView
+        <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0"
-            android:id="@+id/frameNumTV"
-            android:layout_marginLeft="20dp" />
+            android:text="@string/start_button"
+            android:id="@+id/startBTN"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:id="@+id/outputLayout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="94dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Frame Value:"
-            android:id="@+id/textView2"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical" />
-
-        <TextView
+        <Button
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0"
-            android:id="@+id/frameValueTV"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="45dp" />
+            android:layout_height="wrap_content"
+            android:text="@string/stop_button"
+            android:id="@+id/quitBTN"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/store_button"
+            android:id="@+id/storeBTN"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back_button"
+            android:id="@+id/backBTN" />
     </LinearLayout>
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/start_button"
-        android:id="@+id/startBTN"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/stop_button"
-        android:id="@+id/quitBTN"
-        android:layout_marginBottom="10dp" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/store_button"
-        android:id="@+id/storeBTN" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/back_button"
-        android:id="@+id/backBTN" />
 
 </LinearLayout>

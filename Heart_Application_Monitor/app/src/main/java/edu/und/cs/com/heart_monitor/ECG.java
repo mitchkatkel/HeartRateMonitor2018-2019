@@ -67,7 +67,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         //final java.text.DateFormat dateTimeFormatter = DateFormat.getTimeFormat(this);
         final java.text.DateFormat simpleDateFormatter = new SimpleDateFormat("mm:ss");
         signalValueSeries = new GraphViewSeries(new GraphViewData[] {});
-        myGraphView = new LineGraphView(this, "Electrocardiograph Values"){
+        myGraphView = new LineGraphView(this, "Electrocardiograph"){
 
             @Override
             protected String formatLabel(double value, boolean isValueX) {
@@ -212,7 +212,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                         for (BITalinoFrame frame : frames)
                             //analog 3 == accelerometer
                             //analog 2 == ECG
-                            currentValue = frame.getAnalog(3);
+                            currentValue = frame.getAnalog(2);
                             currentFrameNumber = counter;
                         //output results to screen using onProgressUpdate()
                         publishProgress(Integer.toString(currentValue), Integer.toString(counter));

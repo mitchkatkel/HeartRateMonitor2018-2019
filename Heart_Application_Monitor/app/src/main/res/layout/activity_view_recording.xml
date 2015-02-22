@@ -1,20 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="edu.und.cs.com.heart_monitor.ViewRecording"
     android:orientation="vertical"
     android:id="@+id/mainLYT">
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="FILE NAME GOES HERE"
-        android:id="@+id/txtFileName"
-        android:gravity="center_horizontal" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,13 +15,22 @@
         android:layout_weight="0.03"
         android:id="@+id/graphLayoutTwo"
         android:background="#ffffff"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="20dp"></LinearLayout>
+        android:layout_marginBottom="30dp"></LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="FILE NAME GOES HERE"
+        android:id="@+id/txtFileName"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="15dp" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp">
 
         <Button
             android:layout_width="fill_parent"
