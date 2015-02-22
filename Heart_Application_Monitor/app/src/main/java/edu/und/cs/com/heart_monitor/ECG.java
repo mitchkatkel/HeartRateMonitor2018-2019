@@ -4,10 +4,13 @@ package edu.und.cs.com.heart_monitor;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -24,6 +27,8 @@ import com.jjoe64.graphview.LineGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+
+import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -81,6 +86,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         graphLayout.addView(myGraphView);
         myGraphView.setScrollable(true);
         //myGraphView.setShowHorizontalLabels(false);//remove x axis labels
+
 
         final Button startButton = (Button) findViewById(R.id.startBTN);
         final Button quitButton = (Button) findViewById(R.id.quitBTN);
@@ -175,8 +181,6 @@ public class ECG extends RoboActivity implements View.OnClickListener {
      * http://developer.android.com/reference/android/bluetooth/BluetoothAdapter
      * .html#cancelDiscovery()
      */
-                btAdapter.cancelDiscovery();
-
                 sock = dev.createRfcommSocketToServiceRecord(MY_UUID);
                 try {
                     sock.connect();
@@ -204,12 +208,12 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                             reading.setFrames(frames);
                         }
 
-                        // present data in screen
+                        // go into frames to gather data from sensors
                         for (BITalinoFrame frame : frames)
                             //analog 3 == accelerometer
                             //analog 2 == ECG
                             currentValue = frame.getAnalog(3);
-                        currentFrameNumber = counter;
+                            currentFrameNumber = counter;
                         //output results to screen using onProgressUpdate()
                         publishProgress(Integer.toString(currentValue), Integer.toString(counter));
                         counter++;
@@ -218,10 +222,10 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                     // trigger digital outputs
                     // int[] digital = { 1, 1, 1, 1 };
                     // device.trigger(digital);
-                }catch(Exception e){    //error opening socket
-                    connectionFailure = true;
-                    runTest = false;
-                    testFailed = true;
+                }catch(Exception e){              //error opening socket
+                    connectionFailure = true;     //flag that connection has failed
+                    runTest = false;              //flag that the test has not run
+                    testFailed = true;            //flag indicates the test has failed
                     publishProgress();
                 }
             } catch (Exception e) { //error connecting to bluetooth
@@ -229,39 +233,39 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 testFailed = true;
                 Log.e(TAG, "There was an error connecting to phones bluetooth.", e);
             }
-            onCancelled();
-            myThread.cancel(true);
+            onCancelled();                          //close input and output streams and close socket
+            myThread.cancel(true);                  //terminate thread
             return null;
         }
-
+        /*
+        *       onProgress update allows the asynctask to send data gathered to User interface
+         */
         @Override
         protected void onProgressUpdate(String... values) {
             if(connectionFailure == true) {
                 Toast.makeText(getApplicationContext(),"Unable to establish connection", Toast.LENGTH_LONG).show();
             }else {
                 signalValueSeries.appendData(new GraphViewData(currentFrameNumber / 8, currentValue), false, 200);
-                ecgReading += (currentFrameNumber / 8) + "," + currentValue + "\n";
-               // myGraphView.setViewPort((currentFrameNumber / 8),(currentFrameNumber / 8) + 25);
                 //update graph with new data value "appendData((x value, y value), notsure?, max number of points on graph)"
+                ecgReading += (currentFrameNumber / 8) + "," + currentValue + "\n";
+                //add reading values to string buffer to store in case user wants to make file after ECG is completed
                 myGraphView.redrawAll();
             }
 
         }
-
         @Override
         protected void onCancelled() {
             // stop acquisition and close bluetooth connection
             try {
                 // bitalino.stop();         //signal board to quit sending packets
-                InputStream is = null;   //close input and output streams
+                InputStream is = null;      //close input and output streams
                 OutputStream os = null;
-                //  bitalino.stop();         //signal board to quit sending packets
-                sock.close();            //close socket on this end
+                sock.close();               //close socket on this end
             } catch (Exception e) {
                 Log.e(TAG, "There was an error.", e);
             }
         }
 
-    }
+   }
 
 }

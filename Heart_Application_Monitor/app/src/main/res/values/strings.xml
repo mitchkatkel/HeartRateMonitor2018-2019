@@ -38,6 +38,7 @@
     <string name="user_info_button">User Information</string>
     <string name="quit_button">Quit</string>
     <string name="stop_button">Stop</string>
+    <string name="check_signal_button">Check Signal Strength</string>
     <string name="emial_button">Send E-mail</string>
     <string name="submit_button">Submit</string>
     <string name="store_button">Store Reading</string>
@@ -48,5 +49,14 @@
     <string name="select_sensor">Please select sensor device</string>
     <string name="files_stored">Stored ECG Recordings</string>
     <string name="title_activity_view_recording">ViewRecording</string>
+    <string name="home_screen_checklist">Pretest ECG Checklist</string>
+    <string name="home_screen_checklist_item1">1) Sensor is turned on</string>
+    <string name="home_screen_checklist_item2">2) Phone has been paired to sensor</string>
+    <string name="home_screen_checklist_item3">3) ECG leads are correctly connected</string>
+    <string name="home_screen_checklist_item4">4) You are sitting or laying comfortably</string>
+
+
+
+
 
 </resources>
