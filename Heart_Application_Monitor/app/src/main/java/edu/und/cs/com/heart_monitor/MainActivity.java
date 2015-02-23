@@ -56,7 +56,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -94,7 +93,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 actionBar.newTab()
                 .setText("Help")
                 .setTabListener(this));
-
     }
 
 
@@ -304,21 +302,21 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             reportsList = (ListView) rootView.findViewById(R.id.lstvECGFiles);
             reportsList.setOnItemClickListener(this);
             reportsList.setOnItemLongClickListener(this);
-            fileDir = getActivity().getApplicationContext().getFilesDir();
-            filesList = fileDir.listFiles();
+            fileDir = getActivity().getApplicationContext().getFilesDir();                  //retrieve reference internal file directory
+            filesList = fileDir.listFiles();                                                //retrieve list of existing files
             if(filesList != null){
-                for(File file : filesList){
+                for(File file : filesList){                                                 //add file names to ArrayList
                     String name = file.getName();
                     fileNames.add(name);
                 }
             }
-            reportsList.setAdapter(myArrayAdapter);
+            reportsList.setAdapter(myArrayAdapter);                                         //assign an ArrayAdapter to UI ListView
             return rootView;
         }
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Bundle myBundle = new Bundle();
+            Bundle myBundle = new Bundle();                                                 //Bundle fileName to send to ViewRecording Activity
             myBundle.putString("fileName",fileNames.get(position));
             Intent newIntent = new Intent(getActivity(),ViewRecording.class);
             newIntent.putExtras(myBundle);
@@ -327,10 +325,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            getActivity().getApplicationContext().deleteFile(fileNames.get(position));
-            ((BaseAdapter)reportsList.getAdapter()).notifyDataSetChanged();
-            fileNames.remove(position);
-            myArrayAdapter.notifyDataSetChanged();
+            getActivity().getApplicationContext().deleteFile(fileNames.get(position));      //delete file from internal file directory
+            ((BaseAdapter)reportsList.getAdapter()).notifyDataSetChanged();                 //MAY NOT BE NEEDED CHECK LATER
+            fileNames.remove(position);                                                     //delete unwanted file
+            myArrayAdapter.notifyDataSetChanged();                                          //update UI ListView
             return false;
         }
     }

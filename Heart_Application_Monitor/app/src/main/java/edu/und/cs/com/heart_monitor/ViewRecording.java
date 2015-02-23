@@ -24,20 +24,20 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
     Button btnBack,btnEmail;
     LinearLayout lytGraphLayout;
     TextView txtFileName;
-    String fileName;
-    FileHelper myFileHelper = new FileHelper();
+    FileHelper myFileHelper;
     ArrayList<Integer> myFileInfo;
     GraphViewSeries dataValueSeries;
     GraphView myGraphView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recording);
 
+        myFileHelper = new FileHelper();
+
         dataValueSeries = new GraphViewSeries(new GraphView.GraphViewData[] {});
-        myGraphView = new LineGraphView(this, "Electrocardiograph Values"){};
+        myGraphView = new LineGraphView(this, "Electrocardiograph"){};
         lytGraphLayout = (LinearLayout) findViewById(R.id.graphLayoutTwo);
         myGraphView.addSeries(dataValueSeries);
         myGraphView.setManualYAxisBounds(900, 200);
@@ -58,24 +58,12 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
         Bundle myBundle = oldIntent.getExtras();
         String fileName = myBundle.getString("fileName");
         txtFileName.setText("File: " + fileName);
-        //txtFileName.setText(myFileInfo.size() + "");
-
         myFileInfo = myFileHelper.loadFile(fileName, this);
         for(int i = 0; i < myFileInfo.size()/2; ++i){
             dataValueSeries.appendData(new GraphView.GraphViewData(myFileInfo.get(i), myFileInfo.get(++i)), false, 10000);
         }
         myGraphView.redrawAll();
-/*
-        for(int i = 0; i < myFileInfo.size(); i++){
-            dataValueSeries.appendData(new GraphView.GraphViewData(myFileInfo.get(i), myFileInfo.get(++i)), false, 200);
-            //update graph with new data value "appendData((x value, y value), notsure?, max number of points on graph)"
-            myGraphView.redrawAll();
-        }
-*/
-
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,12 +78,10 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -104,7 +90,6 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.backBTN:
                 android.os.Process.killProcess(android.os.Process.myPid());
-                //startActivity(new Intent(ViewRecording.this, MainActivity.class));
                 break;
             case R.id.storeBTN:
                 Toast.makeText(this, "Email sent", Toast.LENGTH_LONG).show();

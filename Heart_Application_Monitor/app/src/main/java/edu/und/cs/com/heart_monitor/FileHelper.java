@@ -1,16 +1,13 @@
 package edu.und.cs.com.heart_monitor;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,8 +20,8 @@ public class FileHelper {
     String fileName;
     FileOutputStream fileOutputStream;
 
-    public FileHelper startFile(FileHelper myFileHelper, Context ctx) {
-        Calendar calendar = Calendar.getInstance();              //get calendar object to retrieve date and time info for file name
+    public void startFile(FileHelper myFileHelper, Context ctx) {
+        Calendar calendar = Calendar.getInstance();                                          //get calendar object to retrieve date and time info for file name
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
         int hour = calendar.get(Calendar.HOUR);
@@ -35,27 +32,23 @@ public class FileHelper {
         try {
             FileOutputStream fOut = ctx.openFileOutput(tempFileName, Context.MODE_PRIVATE);
             myFileHelper.fileOutputStream = fOut;
+
             //Toast.makeText(ctx, "File" + tempFileName + " opened ", Toast.LENGTH_LONG).show();
         }catch(Exception e){
             //Toast.makeText(ctx, "There was a problem opening the file", Toast.LENGTH_LONG).show();
         }
-        return myFileHelper;
     }
 
-    public FileHelper appendFile(FileHelper myFileHelper, int xValue, int yValue, Context ctx){
-        String contents = xValue + "," + yValue +"\n";
+    public void appendFile(FileHelper myFileHelper, int xValue, int yValue, Context ctx){
+        String contents = xValue + "," + yValue + "\n";         //place and and y value on their own line in ouptut file
         try {
-            //myFileHelper.fileOutputStream = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
             myFileHelper.fileOutputStream.write(contents.getBytes());
         }catch(Exception e){
             //Toast.makeText(ctx, "There was a problem appending the file", Toast.LENGTH_LONG).show();
         }
-        return myFileHelper;
     }
 
-
     public void closeFile(FileHelper myFileHelper, Context ctx){
-
         try {
             myFileHelper.fileOutputStream.close();
         }catch(Exception e){
@@ -89,19 +82,17 @@ public class FileHelper {
                     myFileInfo.add(xValue);
                     myFileInfo.add(yValue);
                 }
-            }
-            catch (IOException ex) {
-                // handle exception
-            }
-            finally {
+            }catch (IOException ex) {
+                // handle exception trying to read line from file
+            }finally {
                 try {
                     fis.close();
-                }
-                catch (IOException e) {
-                    // handle exception
+                }catch (IOException e) {
+                    // handle exception trying to close input stream
                 }
             }
         } catch (FileNotFoundException e) {
+               //handle exception trying to opein input stream
             e.printStackTrace();
         }
         return myFileInfo;
