@@ -44,10 +44,19 @@
         android:key="docEmail"
         android:summary="Enter physician email"
         />
+    <EditTextPreference
+        android:title="BITalino MAC address"
+        android:key="macAddress"
+        android:summary="Enter the MAC address located on the board"
+        />
 
     <ListPreference
-        android:title="list"
+        android:title="Bluetooth Devices"
         android:key="blue_tooth"
-        android:entries="@+id/list_blue"
+        android:id="@+id/blueTooth"
+        android:defaultValue="0"
         />
+<EditTextPreference android:title="Click to exit"
+    android:key="buttnsubmit"
+    />
 </PreferenceScreen>

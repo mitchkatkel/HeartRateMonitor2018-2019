@@ -15,8 +15,7 @@ import android.widget.Toast;
 
 public class SplashScreen extends ActionBarActivity {
     static final int TIMER = 3000;
-    final int mode = Activity.MODE_APPEND;
-    final String file_settings = "SettingsFile";
+    final String file_settings = "preferences";
     SharedPreferences mySettings;
     SharedPreferences.Editor myEditor;
 
@@ -24,8 +23,10 @@ public class SplashScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        mySettings = PreferenceManager.getDefaultSharedPreferences(this);
-        if(mySettings.getBoolean("first_time",true)){
+        mySettings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String mac_address = mySettings.getString("macAddress",null);
+        //if((mySettings.getBoolean("first_time",true)) && (mySettings.getString("macAddress",null)==null )){
+         if(mac_address == null){
             myEditor = mySettings.edit();
             myEditor.putBoolean("first_time",false);
             myEditor.commit();
