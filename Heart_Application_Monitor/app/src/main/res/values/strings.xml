@@ -39,7 +39,7 @@
     <string name="quit_button">Quit</string>
     <string name="stop_button">Stop</string>
     <string name="check_signal_button">Check Signal Strength</string>
-    <string name="emial_button">Send E-mail</string>
+    <string name="email_button">Send E-mail</string>
     <string name="submit_button">Submit</string>
     <string name="store_button">Store Reading</string>
     <string name="title_activity_user_info">user_info</string>

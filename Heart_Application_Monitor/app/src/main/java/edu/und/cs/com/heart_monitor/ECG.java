@@ -59,7 +59,6 @@ public class ECG extends RoboActivity implements View.OnClickListener {
     private int RSSI; //bluetooth signal strength
     public FileHelper myFileHelper;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +132,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 if((runTest == true)&&(testFailed == false)&&(testInitiated == true)){
                     Toast.makeText(this, "Stop test first!", Toast.LENGTH_LONG).show();
                 }else if((runTest == false)&&(testFailed == false)&&(testInitiated == true)){
-                    Toast.makeText(this, "Making new recording", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "File " + myFileHelper.fileName + " created", Toast.LENGTH_LONG).show();
                     keepFile = true;
                     myFileHelper.closeFile(myFileHelper, getApplicationContext());
                 }else if((runTest == false)&&(testFailed == true)&&(testInitiated == false)){
