@@ -5,15 +5,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-//<<<<<<< HEAD
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-//=======
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
@@ -21,7 +14,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-//>>>>>>> origin/combined
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.app.Fragment;
@@ -35,21 +27,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-/*<<<<<<< HEAD*/
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-/*=======*/
-import android.widget.ArrayAdapter;
-/*>>>>>>> origin/combined*/
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import roboguice.inject.SharedPreferencesProvider;
-
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
@@ -139,10 +121,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
-//        mViewPager.setCurrentItem(tab.getPosition());
-
-            mViewPager.setCurrentItem(tab.getPosition());
-
+         mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
@@ -169,7 +148,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         public android.app.Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-
             //return PlaceholderFragment.newInstance(position + 1);
             switch(position){
                 case 0:
@@ -180,10 +158,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return new RFragment();
                 case 3:
                     return new HFragment();
-
             }
             return null;
-
         }
 
         @Override
@@ -209,47 +185,28 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 
-
-
     public static class HmFragment extends Fragment {
-/*<<<<<<< HEAD
-        ViewPager mViewPager;
-        Button btnUser;
-        public FragmentTransaction ft;
-        UFragment user = new UFragment();
-=======*/
-ViewPager mViewPager;
+       ViewPager mViewPager;
        public FragmentTransaction ft;
 
-
-
-/*>>>>>>> origin/combined*/
         @Override
         public View onCreateView(final LayoutInflater inflater, final ViewGroup container,Bundle savedInstanceState){
             final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-/*<<<<<<< HEAD
+            SharedPreferences myPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+            final String macAddress = myPrefs.getString("macAddress",null );
             rootView.findViewById(R.id.btnECG).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), ECG.class);
-                    startActivity(intent);
+                    if (macAddress != null) {
+                        Intent intent = new Intent(getActivity(), ECG.class);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(getActivity(), "Please assign a macaddress first", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
-            return rootView;
-=======*/
-
-            rootView.findViewById(R.id.btnECG)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getActivity(), ECG.class);
-                            startActivity(intent);
-                        }
-                    });
-
 
                    return rootView;
-/*>>>>>>> origin/combined*/
         }
     }
 
@@ -263,24 +220,13 @@ ViewPager mViewPager;
 
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-
-/*<<<<<<< HEAD
-            });
-            return rootView;
-        }
-=======*/
             bluetoothAdapter.startDiscovery();
-
             Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
-
-
             ListPreference listPreference = (ListPreference)findPreference("blue_tooth");
             CharSequence[] entries = new String[pairdDevices.size()];
             CharSequence[] entryValues =  new String[pairdDevices.size()];
-/*>>>>>>> origin/combined*/
 
-
-            int i =0;
+            int i = 0;
 
             for(BluetoothDevice device : pairdDevices){
                 String deviceName = device.getName();
@@ -290,7 +236,6 @@ ViewPager mViewPager;
                 list_device.add(deviceName);
                 i++;
             }
-
 
             listPreference.setEntries(entries);
             listPreference.setEntryValues(entryValues);
@@ -309,15 +254,16 @@ ViewPager mViewPager;
     }
 
     public static class RFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-        ListView reportsList;
-        File fileDir;
-        File[] filesList;
-        ArrayList<String> fileNames = new ArrayList();
-        ArrayAdapter myArrayAdapter;
+        ListView reportsList;                                                                //reference to listview that contains recorded ECG sessions
+        File fileDir;                                                                        //reference to internal file directory
+        File[] filesList;                                                                    //used to store list of internal files
+        ArrayList<String> fileNames = new ArrayList();                                       //stores names of current files in internal directory
+        ArrayAdapter myArrayAdapter;                                                         //allows ListView object to me updated using information gathered
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.fragment_report,container, false);
+
             fileNames.clear();
             myArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,android.R.id.text1, fileNames);
             reportsList = (ListView) rootView.findViewById(R.id.lstvECGFiles);

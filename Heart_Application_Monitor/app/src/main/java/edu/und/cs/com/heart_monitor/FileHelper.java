@@ -20,6 +20,7 @@ public class FileHelper {
     String fileName;
     FileOutputStream fileOutputStream;
 
+    //Opens FileOutputStream and generates filename from current time and date and stores them both in FileHelper Object
     public void startFile(FileHelper myFileHelper, Context ctx) {
         Calendar calendar = Calendar.getInstance();                                          //get calendar object to retrieve date and time info for file name
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -32,13 +33,13 @@ public class FileHelper {
         try {
             FileOutputStream fOut = ctx.openFileOutput(tempFileName, Context.MODE_PRIVATE);
             myFileHelper.fileOutputStream = fOut;
-
             //Toast.makeText(ctx, "File" + tempFileName + " opened ", Toast.LENGTH_LONG).show();
         }catch(Exception e){
             //Toast.makeText(ctx, "There was a problem opening the file", Toast.LENGTH_LONG).show();
         }
     }
 
+    //Gets FileOutputStream from FileHeler object and writes current x and y value to the file on their own line
     public void appendFile(FileHelper myFileHelper, int xValue, int yValue, Context ctx){
         String contents = xValue + "," + yValue + "\n";         //place and and y value on their own line in ouptut file
         try {
@@ -48,6 +49,7 @@ public class FileHelper {
         }
     }
 
+    //Gets FileOutputStream from FileHeler object and closes current file's output stream
     public void closeFile(FileHelper myFileHelper, Context ctx){
         try {
             myFileHelper.fileOutputStream.close();
@@ -97,60 +99,4 @@ public class FileHelper {
         }
         return myFileInfo;
     }
-
-    /*
-    No LONGER BEING USED
-     */
-    public int writeFile(String contents, Context ctx) {
-        Calendar calendar = Calendar.getInstance();              //get calendar object to retrieve date and time info for file name
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
-        int hour = calendar.get(Calendar.HOUR);
-        int min = calendar.get(Calendar.MINUTE);
-        int sec = calendar.get(Calendar.SECOND);
-        String fileName = (month + "_" + day + "_" + hour + "_" + min + "_" + sec);     //combine date and time info into string for file name
-        try {
-            FileOutputStream fOut = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
-            fOut.write(contents.getBytes());
-            fOut.close();
-            Toast.makeText(ctx, "File " + fileName + " saved ", Toast.LENGTH_LONG).show();
-        }catch(Exception e){
-            Toast.makeText(ctx, "There was a problem saving the file", Toast.LENGTH_LONG).show();
-        }
-        return 0;
-    }
-
-    /*
-    NO LONGER BEING USED
-     */
-    public int calcFileSize(String fileName, Context ctx) {
-        int lineCount = 0;
-        StringBuffer fileContent = new StringBuffer("");
-        FileInputStream fis;
-        try {
-            fis = ctx.openFileInput( fileName );
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            try {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    lineCount++;
-                }
-            }
-            catch (IOException ex) {
-                // handle exception
-            }
-            finally {
-                try {
-                    fis.close();
-                }
-                catch (IOException e) {
-                    // handle exception
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return lineCount;
-    }
-
 }

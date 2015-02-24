@@ -35,7 +35,7 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/emial_button"
+            android:text="@string/email_button"
             android:id="@+id/emailBTN"
             android:layout_marginBottom="20dp" />
 

@@ -1,6 +1,5 @@
 package edu.und.cs.com.heart_monitor;
 
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -8,9 +7,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.EditTextPreference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -56,7 +58,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
     private boolean testInitiated = false;
     private AsyncTask myThread;
     private boolean keepFile;
-    private int RSSI; //bluetooth signal strength
+    private int RSSI;                                           //bluetooth signal strength TODO ANDREW
     public FileHelper myFileHelper;
 
     @Override
@@ -64,7 +66,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_ecg);
 
-        keepFile = false;
+        keepFile = false;                                                               //flag used to indicate whether or not file should be kept
 
         //let user know it will take a few seconds to start getting readings
         makeText(this, "Establishing Connection to Sensor", Toast.LENGTH_LONG).show();
@@ -79,7 +81,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 if (isValueX) {
                     // convert unix time to human time
                     return simpleDateFormatter.format(new Date((long) value*65));
-                } else return super.formatLabel(value, isValueX); // let the y-value be normal-formatted
+                } else return super.formatLabel(value, isValueX);                       // let the y-value be normal-formatted
             }
         };
         myGraphView.addSeries(signalValueSeries);
@@ -87,7 +89,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         myGraphView.setManualYAxisBounds(900, 200);
         graphLayout.addView(myGraphView);
         myGraphView.setScrollable(true);
-        //myGraphView.setShowHorizontalLabels(false);//remove x axis labels
+        //myGraphView.setShowHorizontalLabels(false);                                   //remove x axis labels
         myFileHelper = new FileHelper();
         myFileHelper.startFile(myFileHelper, getApplicationContext());
 
@@ -104,7 +106,6 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         // execute
         if (!testInitiated) {
             myThread = new TestAsyncTask().execute();
-            //testInitiated = true;           //signal test has started
         }
     }
 
@@ -112,8 +113,8 @@ public class ECG extends RoboActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.startBTN:
-                runTest = false;              //ensure current test terminates correctly
-                myFileHelper.closeFile(myFileHelper, getApplicationContext());      //close file output stream
+                runTest = false;                                                                                    //ensure current test terminates correctly
+                myFileHelper.closeFile(myFileHelper, getApplicationContext());                                       //close file output stream
                 if(keepFile != true) getApplicationContext().deleteFile(myFileHelper.fileName);
                 startActivity(new Intent(ECG.this, ECG.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 break;
@@ -129,13 +130,13 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 startActivity(new Intent(ECG.this, MainActivity.class));
                 break;
             case R.id.storeBTN:
-                if((runTest == true)&&(testFailed == false)&&(testInitiated == true)){
+                if((runTest == true)&&(testFailed == false)&&(testInitiated == true)){                              //test is still running
                     Toast.makeText(this, "Stop test first!", Toast.LENGTH_LONG).show();
-                }else if((runTest == false)&&(testFailed == false)&&(testInitiated == true)){
+                }else if((runTest == false)&&(testFailed == false)&&(testInitiated == true)){                       //test has run successfully, has stopped, can store file
                     Toast.makeText(this, "File " + myFileHelper.fileName + " created", Toast.LENGTH_LONG).show();
                     keepFile = true;
                     myFileHelper.closeFile(myFileHelper, getApplicationContext());
-                }else if((runTest == false)&&(testFailed == true)&&(testInitiated == false)){
+                }else if((runTest == false)&&(testFailed == true)&&(testInitiated == false)){                       //test is not running and an error of some kind occurred
                     Toast.makeText(this, "No recording made", Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -156,12 +157,13 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         private BITalinoDevice bitalino;
         public int currentValue = 0;
         public int currentFrameNumber = 0;
+        SharedPreferences getPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String macAddress = getPreference.getString("macAddress",null );
 
-        @Override
         protected Void doInBackground(Void... paramses) {
             try {
                 // Let's get the remote Bluetooth device
-                final String remoteDevice = "98:D3:31:B2:BD:8D";
+                final String remoteDevice = macAddress;
                 final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
                 dev = btAdapter.getRemoteDevice(remoteDevice);
                 //establish bluetooth connection

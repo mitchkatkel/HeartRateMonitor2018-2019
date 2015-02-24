@@ -34,21 +34,15 @@ public class PrefUser extends PreferenceActivity{
         ArrayAdapter<String>list_device = new ArrayAdapter<String>(this , android.R.layout.simple_list_item_1);
 
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-
         bluetoothAdapter.startDiscovery();
         Toast toast=Toast.makeText(getApplicationContext(),"Please ensure that the BITalino board is discoverable",Toast.LENGTH_LONG);
         toast.show();
 
         Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
 
-
         ListPreference listPreference = (ListPreference)findPreference("blue_tooth");
         CharSequence[] entries = new String[pairdDevices.size()];
         CharSequence[] entryValues =  new String[pairdDevices.size()];
-
-
-
 
         int i =0;
 
@@ -61,10 +55,7 @@ public class PrefUser extends PreferenceActivity{
                 i++;
             }
 
-
-
         setListAdapter(list_device);
-
 
         listPreference.setEntries(entries);
         listPreference.setEntryValues(entryValues);
