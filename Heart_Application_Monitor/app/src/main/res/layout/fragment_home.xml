@@ -16,20 +16,74 @@
             android:text="@string/home_fragment"
             android:textSize="30sp"
             android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/home_screen_checklist"
+            android:id="@+id/textView6"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="70dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/home_screen_checklist_item1"
+            android:id="@+id/textView10"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="15dp"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/home_screen_checklist_item2"
+            android:id="@+id/textView11"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/home_screen_checklist_item3"
+            android:id="@+id/textView12"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/home_screen_checklist_item4"
+            android:id="@+id/textView13"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="15dp" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="308dp"
             android:layout_height="wrap_content"
             android:text="To start the ECG capture press the button below. Swipe to the right or click the buttons below to go to view reports, see the tutorial, etc. "
             android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="25dp" />
 
         <Button
             android:layout_width="wrap_content"

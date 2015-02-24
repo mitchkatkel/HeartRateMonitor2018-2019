@@ -1,11 +1,19 @@
 package edu.und.cs.com.heart_monitor;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+//<<<<<<< HEAD
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+//=======
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
@@ -13,6 +21,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+//>>>>>>> origin/combined
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.app.Fragment;
@@ -26,9 +35,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+/*<<<<<<< HEAD*/
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+/*=======*/
+import android.widget.ArrayAdapter;
+/*>>>>>>> origin/combined*/
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +52,6 @@ import roboguice.inject.SharedPreferencesProvider;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
-
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -57,7 +72,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -96,7 +110,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 actionBar.newTab()
                 .setText("Help")
                 .setTabListener(this));
-
     }
 
 
@@ -142,7 +155,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
 
 
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -180,7 +192,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             return 4;
         }
 
-
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
@@ -201,16 +212,31 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 
     public static class HmFragment extends Fragment {
+/*<<<<<<< HEAD
+        ViewPager mViewPager;
+        Button btnUser;
+        public FragmentTransaction ft;
+        UFragment user = new UFragment();
+=======*/
 ViewPager mViewPager;
        public FragmentTransaction ft;
 
 
 
+/*>>>>>>> origin/combined*/
         @Override
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                                 Bundle savedInstanceState){
-
+        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,Bundle savedInstanceState){
             final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+/*<<<<<<< HEAD
+            rootView.findViewById(R.id.btnECG).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), ECG.class);
+                    startActivity(intent);
+                }
+            });
+            return rootView;
+=======*/
 
             rootView.findViewById(R.id.btnECG)
                     .setOnClickListener(new View.OnClickListener() {
@@ -223,9 +249,8 @@ ViewPager mViewPager;
 
 
                    return rootView;
+/*>>>>>>> origin/combined*/
         }
-
-
     }
 
     public static class PFragment extends PreferenceFragment{
@@ -239,6 +264,11 @@ ViewPager mViewPager;
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 
+/*<<<<<<< HEAD
+            });
+            return rootView;
+        }
+=======*/
             bluetoothAdapter.startDiscovery();
 
             Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
@@ -247,6 +277,7 @@ ViewPager mViewPager;
             ListPreference listPreference = (ListPreference)findPreference("blue_tooth");
             CharSequence[] entries = new String[pairdDevices.size()];
             CharSequence[] entryValues =  new String[pairdDevices.size()];
+/*>>>>>>> origin/combined*/
 
 
             int i =0;
@@ -277,14 +308,49 @@ ViewPager mViewPager;
         }
     }
 
-    public static class RFragment extends Fragment{
+    public static class RFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+        ListView reportsList;
+        File fileDir;
+        File[] filesList;
+        ArrayList<String> fileNames = new ArrayList();
+        ArrayAdapter myArrayAdapter;
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState){
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.fragment_report,container, false);
-
+            fileNames.clear();
+            myArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,android.R.id.text1, fileNames);
+            reportsList = (ListView) rootView.findViewById(R.id.lstvECGFiles);
+            reportsList.setOnItemClickListener(this);
+            reportsList.setOnItemLongClickListener(this);
+            fileDir = getActivity().getApplicationContext().getFilesDir();                  //retrieve reference internal file directory
+            filesList = fileDir.listFiles();                                                //retrieve list of existing files
+            if(filesList != null){
+                for(File file : filesList){                                                 //add file names to ArrayList
+                    String name = file.getName();
+                    fileNames.add(name);
+                }
+            }
+            reportsList.setAdapter(myArrayAdapter);                                         //assign an ArrayAdapter to UI ListView
             return rootView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Bundle myBundle = new Bundle();                                                 //Bundle fileName to send to ViewRecording Activity
+            myBundle.putString("fileName",fileNames.get(position));
+            Intent newIntent = new Intent(getActivity(),ViewRecording.class);
+            newIntent.putExtras(myBundle);
+            startActivity(newIntent);
+        }
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            getActivity().getApplicationContext().deleteFile(fileNames.get(position));      //delete file from internal file directory
+            ((BaseAdapter)reportsList.getAdapter()).notifyDataSetChanged();                 //MAY NOT BE NEEDED CHECK LATER
+            fileNames.remove(position);                                                     //delete unwanted file
+            myArrayAdapter.notifyDataSetChanged();                                          //update UI ListView
+            return false;
         }
     }
 
