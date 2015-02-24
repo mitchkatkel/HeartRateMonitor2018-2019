@@ -47,6 +47,7 @@
     <string name="device_selected">Heart Sensor:</string>
     <string name="store_reading">Store Reading</string>
     <string name="select_sensor">Please select sensor device</string>
+<!--<<<<<<< HEAD-->
     <string name="files_stored">Stored ECG Recordings</string>
     <string name="title_activity_view_recording">ViewRecording</string>
     <string name="home_screen_checklist">Pretest ECG Checklist</string>
@@ -54,5 +55,8 @@
     <string name="home_screen_checklist_item2">2) Pair phone with sensor</string>
     <string name="home_screen_checklist_item3">3) Connect ECG leads</string>
     <string name="home_screen_checklist_item4">4) Sit or lay down</string>
+<!--=======-->
+    <string name="title_activity_pref_user">PrefUser</string>
+<!-->>>>>>>> origin/combined-->
 
 </resources>

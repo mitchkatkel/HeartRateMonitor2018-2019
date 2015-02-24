@@ -3,20 +3,31 @@ package edu.und.cs.com.heart_monitor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Set;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+//<<<<<<< HEAD
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+//=======
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+//>>>>>>> origin/combined
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -24,14 +35,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+/*<<<<<<< HEAD*/
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+/*=======*/
+import android.widget.ArrayAdapter;
+/*>>>>>>> origin/combined*/
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import roboguice.inject.SharedPreferencesProvider;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -62,7 +79,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -149,7 +166,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public android.app.Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
@@ -158,7 +175,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 case 0:
                     return new HmFragment();
                 case 1:
-                    return new UFragment();
+                    return new PFragment();
                 case 2:
                     return new RFragment();
                 case 3:
@@ -195,13 +212,22 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 
     public static class HmFragment extends Fragment {
+/*<<<<<<< HEAD
         ViewPager mViewPager;
         Button btnUser;
         public FragmentTransaction ft;
         UFragment user = new UFragment();
+=======*/
+ViewPager mViewPager;
+       public FragmentTransaction ft;
+
+
+
+/*>>>>>>> origin/combined*/
         @Override
         public View onCreateView(final LayoutInflater inflater, final ViewGroup container,Bundle savedInstanceState){
             final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+/*<<<<<<< HEAD
             rootView.findViewById(R.id.btnECG).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -210,81 +236,76 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 }
             });
             return rootView;
+=======*/
+
+            rootView.findViewById(R.id.btnECG)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getActivity(), ECG.class);
+                            startActivity(intent);
+                        }
+                    });
+
+
+                   return rootView;
+/*>>>>>>> origin/combined*/
         }
     }
 
-    public static class UFragment extends Fragment{
-        Button btnSubmit;
-        EditText name;
-        EditText phone;
-        EditText email;
-        EditText emergencyName;
-        EditText emergencyPhone;
-        EditText emergencyEmail;
+    public static class PFragment extends PreferenceFragment{
 
-        TextView txtResults;
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preferences);
+
+            ArrayAdapter<String> list_device = new ArrayAdapter<String>(this.getActivity() , android.R.layout.simple_list_item_1);
+
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState){
-            View rootView = inflater.inflate(R.layout.fragment_user, container,false);
-
-            name = (EditText)rootView.findViewById(R.id.edtName);
-            phone = (EditText)rootView.findViewById(R.id.edtPhone);
-            email = (EditText)rootView.findViewById(R.id.edtEmail);
-            emergencyName = (EditText)rootView.findViewById(R.id.edtEmergencyName);
-            emergencyPhone = (EditText)rootView.findViewById(R.id.edtEmergencyPhone);
-            emergencyEmail = (EditText)rootView.findViewById(R.id.edtEmergencyemail);
-            btnSubmit = (Button)rootView.findViewById(R.id.btnUserSubmit);
-            txtResults = (TextView)rootView.findViewById(R.id.txtResults);
-            btnSubmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String n,e,p, emerg_n,emerg_p,emerg_e;
-                    n = name.getText().toString().trim();
-                    e = email.getText().toString().trim();
-                    p = phone.getText().toString().trim();
-
-                    emerg_n = emergencyName.getText().toString().trim();
-                    emerg_e = emergencyEmail.getText().toString().trim();
-                    emerg_p = emergencyPhone.getText().toString().trim();
-
-                    Intent myIntent = new Intent(getActivity(),UserData.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name",n);
-                    bundle.putString("email",e);
-                    bundle.putString("phone",p);
-                    bundle.putString("Emerg_name",emerg_n);
-                    bundle.putString("Emerg_email",emerg_e);
-                    bundle.putString("Emerg_phone",emerg_p);
-                    myIntent.putExtras(bundle);
-                    startActivityForResult(myIntent,1);
-
-                }
-
+/*<<<<<<< HEAD
             });
             return rootView;
         }
+=======*/
+            bluetoothAdapter.startDiscovery();
 
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data){
-            super.onActivityResult(requestCode, resultCode,data);
-            if((requestCode == 1)&&(resultCode== Activity.RESULT_OK)){
-                Bundle dataBundle = data.getExtras();
-                String name = dataBundle.getString("name");
-                String email = dataBundle.getString("email");
-                String phone = dataBundle.getString("phone");
-                String emergName = dataBundle.getString("Emerg_name");
-                String emergPhone = dataBundle.getString("Emerg_phone");
-                String emergEmail = dataBundle.getString("Emerg_email");
-                txtResults.setText("Name: " + name + "\nEmail: " + email + ":\nPhone: "+phone +"\n\nEmergency Contact" + "\nName: " +emergName +"\nPhone: " + emergPhone +"\nEmail" + emergEmail);
-            }else{
-                Toast toast = Toast.makeText(getActivity(), "Something went wrong. Please try again.",Toast.LENGTH_LONG);
-                toast.show();
+            Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
+
+
+            ListPreference listPreference = (ListPreference)findPreference("blue_tooth");
+            CharSequence[] entries = new String[pairdDevices.size()];
+            CharSequence[] entryValues =  new String[pairdDevices.size()];
+/*>>>>>>> origin/combined*/
+
+
+            int i =0;
+
+            for(BluetoothDevice device : pairdDevices){
+                String deviceName = device.getName();
+                String deviceAddress = device.getAddress();
+                entries[i] = deviceName;
+                entryValues[i] = deviceAddress;
+                list_device.add(deviceName);
+                i++;
             }
-        }
 
+
+            listPreference.setEntries(entries);
+            listPreference.setEntryValues(entryValues);
+
+            listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    EditTextPreference mac_address = (EditTextPreference)findPreference("macAddress");
+                    mac_address.setSummary((String)newValue.toString());
+                    mac_address.setText((String) newValue.toString());
+                    return false;
+                }
+            });
+
+        }
     }
 
     public static class RFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {

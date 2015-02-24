@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:title="Name"
+        android:key="name"
+        android:summary="Enter your Name"
+        />
+    <EditTextPreference
+        android:title="Phone"
+        android:key="phone"
+        android:summary="Enter your phone"
+        />
+    <EditTextPreference
+        android:title="Email"
+        android:key="email"
+        android:summary="Enter your email"
+        />
+
+    <EditTextPreference
+        android:title="Emergency Contact Name"
+        android:key="emerg_name"
+        android:summary="Enter Emergency Name"
+        />
+    <EditTextPreference
+        android:title="Emergency Contact Email"
+        android:key="emerg_email"
+        android:summary="Enter Emergency Name"
+
+        />
+
+    <EditTextPreference
+        android:title="Emergency Contact Phone"
+        android:key="emerg_phone"
+        android:summary="Enter Emergency Phone"
+        />
+
+    <EditTextPreference
+        android:title="Physician Name"
+        android:key="docName"
+        android:summary="Enter physician name"
+        />
+    <EditTextPreference
+        android:title="Physician Email"
+        android:key="docEmail"
+        android:summary="Enter physician email"
+        />
+    <EditTextPreference
+        android:title="BITalino MAC address"
+        android:key="macAddress"
+        android:summary="Enter the MAC address located on the board"
+        />
+
+    <ListPreference
+        android:title="Bluetooth Devices"
+        android:key="blue_tooth"
+        android:id="@+id/blueTooth"
+        android:defaultValue="0"
+        />
+<EditTextPreference android:title="Click to exit"
+    android:key="buttnsubmit"
+    />
+</PreferenceScreen>
