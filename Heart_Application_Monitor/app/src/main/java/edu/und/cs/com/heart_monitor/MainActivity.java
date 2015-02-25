@@ -243,14 +243,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
+;
                     EditTextPreference mac_address = (EditTextPreference)findPreference("macAddress");
-                    mac_address.setSummary((String)newValue.toString());
+
+                    mac_address.setSummary((String) newValue.toString());
                     mac_address.setText((String) newValue.toString());
+
                     return false;
                 }
             });
-
-        }
+       }
     }
 
     public static class RFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {

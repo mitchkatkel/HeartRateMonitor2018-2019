@@ -190,7 +190,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                         for (BITalinoFrame frame : frames)
                             //analog 3 == accelerometer
                             //analog 2 == ECG
-                            currentValue = frame.getAnalog(3);
+                            currentValue = frame.getAnalog(2);
                             currentFrameNumber = counter;
                         //output results to screen using onProgressUpdate()
                         publishProgress(Integer.toString(currentValue), Integer.toString(counter));
@@ -227,7 +227,6 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 myFileHelper.appendFile(myFileHelper,currentFrameNumber / 8, currentValue, getApplicationContext());
                 myGraphView.redrawAll();
             }
-
         }
 
         @Override
