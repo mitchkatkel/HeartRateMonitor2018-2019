@@ -84,6 +84,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 } else return super.formatLabel(value, isValueX);                       // let the y-value be normal-formatted
             }
         };
+        //Set graph options
         myGraphView.addSeries(signalValueSeries);
         LinearLayout graphLayout = (LinearLayout) findViewById(R.id.graphLayout);
         myGraphView.setManualYAxisBounds(900, 200);
@@ -93,11 +94,13 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         myFileHelper = new FileHelper();
         myFileHelper.startFile(myFileHelper, getApplicationContext());
 
+        //Find the buttons by their ID
         final Button startButton = (Button) findViewById(R.id.startBTN);
         final Button quitButton = (Button) findViewById(R.id.quitBTN);
         final Button backButton = (Button) findViewById(R.id.backBTN);
         final Button storeButton = (Button) findViewById(R.id.storeBTN);
 
+        //Listen for button presses
         startButton.setOnClickListener(this);
         quitButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
@@ -159,10 +162,12 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         public int currentFrameNumber = 0;
         SharedPreferences getPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String macAddress = getPreference.getString("macAddress",null );
+        private final int ecgChannel = 1;
+        private final int sampleRate = 8;
 
         protected Void doInBackground(Void... paramses) {
             try {
-                // Let's get the remote Bluetooth device
+                // Get the remote Bluetooth device
                 final String remoteDevice = macAddress;
                 final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
                 dev = btAdapter.getRemoteDevice(remoteDevice);
@@ -171,7 +176,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 try {
                     sock.connect();
                     testInitiated = true;
-                    bitalino = new BITalinoDevice(1000, new int[]{0, 1, 2, 3, 4, 5});
+                    bitalino = new BITalinoDevice(1000, new int[]{ecgChannel});
                     bitalino.open(sock.getInputStream(), sock.getOutputStream());
                     // start acquisition on predefined analog channels
                     bitalino.start();
@@ -179,7 +184,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                     int counter = 0;
                     //long startTime = System.currentTimeMillis();
                     while (runTest) {
-                        BITalinoFrame[] frames = bitalino.read(8);//read(number of frames to read)
+                        BITalinoFrame[] frames = bitalino.read(sampleRate);//read(number of frames to read)
                         if (UPLOAD) {
                             // prepare reading for upload
                             BITalinoReading reading = new BITalinoReading();
@@ -187,18 +192,15 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                             reading.setFrames(frames);
                         }
                         // go into frames to gather data from sensors
-                        for (BITalinoFrame frame : frames)
-                            //analog 3 == accelerometer
+                        for (BITalinoFrame frame : frames) {
                             //analog 2 == ECG
-                            currentValue = frame.getAnalog(2);
-                            currentFrameNumber = counter;
+                            currentValue = frame.getAnalog(ecgChannel);
+                        }
+                        currentFrameNumber = counter;
                         //output results to screen using onProgressUpdate()
                         publishProgress(Integer.toString(currentValue), Integer.toString(counter));
                         counter++;
                     }
-                    // trigger digital outputs
-                    // int[] digital = { 1, 1, 1, 1 };
-                    // device.trigger(digital);
                 }catch(Exception e){              //error opening socket
                     connectionFailure = true;     //flag that connection has failed
                     runTest = false;              //flag that the test has not run
@@ -219,12 +221,13 @@ public class ECG extends RoboActivity implements View.OnClickListener {
          */
         @Override
         protected void onProgressUpdate(String... values) {
+            //If the connection has failed, show a message
             if(connectionFailure == true) {
                 Toast.makeText(getApplicationContext(),"Unable to establish connection", Toast.LENGTH_LONG).show();
             }else {
-                signalValueSeries.appendData(new GraphViewData(currentFrameNumber / 8, currentValue), false, 200);
+                signalValueSeries.appendData(new GraphViewData(currentFrameNumber, currentValue), false, 200);
                 //update graph with new data value "appendData((x value, y value), notsure?, max number of points on graph)"
-                myFileHelper.appendFile(myFileHelper,currentFrameNumber / 8, currentValue, getApplicationContext());
+                myFileHelper.appendFile(myFileHelper,currentFrameNumber / sampleRate, currentValue, getApplicationContext());
                 myGraphView.redrawAll();
             }
         }

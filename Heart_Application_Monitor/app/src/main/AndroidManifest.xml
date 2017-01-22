@@ -35,6 +35,11 @@
             android:label="@string/title_activity_user_data" >
         </activity>
         <activity
+            android:name=".ECGTest"
+            android:screenOrientation="portrait"
+            android:label="ECGTest" >
+        </activity>
+        <activity
            android:name=".ViewRecording"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_view_recording" >

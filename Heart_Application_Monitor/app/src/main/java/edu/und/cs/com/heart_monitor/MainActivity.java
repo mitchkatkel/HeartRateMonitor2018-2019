@@ -92,6 +92,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 actionBar.newTab()
                 .setText("Help")
                 .setTabListener(this));
+        actionBar.addTab(
+                actionBar.newTab()
+                .setText("ECG Test")
+                .setTabListener(this));
     }
 
 
@@ -158,14 +162,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return new RFragment();
                 case 3:
                     return new HFragment();
+                case 4:
+                    return new TFragment();
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            // Show 4 total pages.
-            return 4;
+            // Show 5 total pages.
+            return 5;
         }
 
         @Override
@@ -180,6 +186,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return getString(R.string.title_section3).toUpperCase(l);
                 case 3:
                     return getString(R.string.title_section4).toUpperCase(l);
+                case 4:
+                    return getString(R.string.title_section5).toUpperCase(l);
             }
             return null;
         }
@@ -207,6 +215,21 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             });
 
                    return rootView;
+        }
+    }
+
+    public static class TFragment extends Fragment {
+        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,Bundle savedInstanceState) {
+            final View rootView = inflater.inflate(R.layout.fragment_start_test, container, false);
+            rootView.findViewById(R.id.startBTN).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view){
+                Intent intent = new Intent(getActivity(), ECGTest.class);
+                startActivity(intent);
+                }
+            });
+
+            return rootView;
         }
     }
 

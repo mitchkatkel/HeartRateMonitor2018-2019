@@ -6,6 +6,7 @@
     <string name="title_section2">User Settings</string>
     <string name="title_section3">Reports</string>
     <string name="title_section4">Help</string>
+    <string name="title_section5">ECG Test</string>
     <string name="ecg">Start ECG</string>
     <string name="reports">Reports</string>
     <string name="user_settings">User Settings</string>
@@ -42,6 +43,7 @@
     <string name="email_button">Send E-mail</string>
     <string name="submit_button">Submit</string>
     <string name="store_button">Store Reading</string>
+    <string name="chose_file_button">Choose File</string>
     <string name="title_activity_user_info">user_info</string>
     <string name="user_title">User Information</string>
     <string name="device_selected">Heart Sensor:</string>
