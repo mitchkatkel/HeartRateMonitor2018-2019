@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import roboguice.activity.RoboActivity;
 
@@ -39,6 +40,8 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
 
     AsyncTask task;
 
+    private int qrs[];
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_test);
@@ -50,7 +53,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
         //Set graph options
         myGraphView.addSeries(signalValueSeries);
         LinearLayout graphLayout = (LinearLayout) findViewById(R.id.graphLayout);
-        myGraphView.setManualYAxisBounds(.3, -.3);
+        myGraphView.setManualYAxisBounds(200, -200);
         graphLayout.addView(myGraphView);
         myGraphView.setScrollable(true);
 
@@ -103,8 +106,32 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
      * Button to chose a file was pressed.
      */
     private void onFileButton() {
+
+        try {
+            AssetManager mnger = getAssets();
+            InputStream stream = mnger.open("samples/Sample1.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            float y;
+            int sam = 10000;
+            int[] list = new int[sam];
+            String[] t = new String[sam];
+            String[] line;
+            for (int x = 0; x < sam; x++) {
+                line = reader.readLine().split(",");
+                list[x] = Integer.parseInt(line[1]);
+                t[x] = line[0];
+            }
+            float[] pass = QRSDetection.highPass(list, sam);
+            float[] low = QRSDetection.lowPass(pass, sam);
+            qrs = QRSDetection.QRS(low, sam);
+        }
+        catch(Exception e) {
+            Log.d("TAG", e.getMessage());
+        }
+
         //Get the AssetManager and get all the sample files
         AssetManager mngr = getAssets();
+
         try {
             final String[] samples = mngr.list("samples");
             //Create a dialog to select a file to read from
@@ -122,8 +149,8 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
         }
         catch(Exception e) {
         }
-
     }
+
 
     /**
      * Button to go back was pressed.
@@ -176,13 +203,19 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
                     break;
                 }
             }
+
+
             task.cancel(true);
             return null;
         }
 
         @Override
         protected void onProgressUpdate(String... values) {
-            signalValueSeries.appendData(new GraphViewData(x, y), false, 200);
+            GraphViewData data = new GraphViewData(x, y);
+
+            signalValueSeries.appendData(data, false, 200);
+            if(qrs[x] == 1)
+                Log.d("QRS", x + " IS QRS POINT.");
             myGraphView.redrawAll();
         }
     }
