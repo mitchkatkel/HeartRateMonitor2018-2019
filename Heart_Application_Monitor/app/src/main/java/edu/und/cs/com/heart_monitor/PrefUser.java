@@ -1,11 +1,13 @@
 package edu.und.cs.com.heart_monitor;
 
 import android.content.Intent;
+import android.os.Build;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.preference.Preference;
@@ -33,20 +35,21 @@ public class PrefUser extends PreferenceActivity{
         addPreferencesFromResource(R.xml.preferences);
         ArrayAdapter<String>list_device = new ArrayAdapter<String>(this , android.R.layout.simple_list_item_1);
 
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        bluetoothAdapter.startDiscovery();
-        Toast toast=Toast.makeText(getApplicationContext(),"Please ensure that the BITalino board is discoverable",Toast.LENGTH_LONG);
-        toast.show();
+        if(!Build.FINGERPRINT.contains("generic")) {
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            bluetoothAdapter.startDiscovery();
+            Toast toast = Toast.makeText(getApplicationContext(), "Please ensure that the BITalino board is discoverable", Toast.LENGTH_LONG);
+            toast.show();
 
-        Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
+            Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
 
-        ListPreference listPreference = (ListPreference)findPreference("blue_tooth");
-        CharSequence[] entries = new String[pairdDevices.size()];
-        CharSequence[] entryValues =  new String[pairdDevices.size()];
+            ListPreference listPreference = (ListPreference) findPreference("blue_tooth");
+            CharSequence[] entries = new String[pairdDevices.size()];
+            CharSequence[] entryValues = new String[pairdDevices.size()];
 
-        int i =0;
+            int i = 0;
 
-            for(BluetoothDevice device : pairdDevices){
+            for (BluetoothDevice device : pairdDevices) {
                 String deviceName = device.getName();
                 String deviceAddress = device.getAddress();
                 entries[i] = deviceName;
@@ -55,21 +58,21 @@ public class PrefUser extends PreferenceActivity{
                 i++;
             }
 
-        setListAdapter(list_device);
+            setListAdapter(list_device);
 
-        listPreference.setEntries(entries);
-        listPreference.setEntryValues(entryValues);
+            listPreference.setEntries(entries);
+            listPreference.setEntryValues(entryValues);
 
-        listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                EditTextPreference mac_address = (EditTextPreference)findPreference("macAddress");
-                mac_address.setSummary((String)newValue.toString());
-                mac_address.setText((String) newValue.toString());
-                return false;
-            }
-        });
-
+            listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    EditTextPreference mac_address = (EditTextPreference) findPreference("macAddress");
+                    mac_address.setSummary((String) newValue.toString());
+                    mac_address.setText((String) newValue.toString());
+                    return false;
+                }
+            });
+        }
         Preference submit = (Preference)findPreference("buttnsubmit");
 
         submit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

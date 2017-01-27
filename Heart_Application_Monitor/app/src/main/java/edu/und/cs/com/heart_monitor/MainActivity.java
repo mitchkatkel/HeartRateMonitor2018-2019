@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -241,40 +242,42 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
             ArrayAdapter<String> list_device = new ArrayAdapter<String>(this.getActivity() , android.R.layout.simple_list_item_1);
 
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if(!Build.FINGERPRINT.contains("generic")) {
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-            bluetoothAdapter.startDiscovery();
-            Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
-            ListPreference listPreference = (ListPreference)findPreference("blue_tooth");
-            CharSequence[] entries = new String[pairdDevices.size()];
-            CharSequence[] entryValues =  new String[pairdDevices.size()];
+                bluetoothAdapter.startDiscovery();
+                Set<BluetoothDevice> pairdDevices = bluetoothAdapter.getBondedDevices();
+                ListPreference listPreference = (ListPreference) findPreference("blue_tooth");
+                CharSequence[] entries = new String[pairdDevices.size()];
+                CharSequence[] entryValues = new String[pairdDevices.size()];
 
-            int i = 0;
+                int i = 0;
 
-            for(BluetoothDevice device : pairdDevices){
-                String deviceName = device.getName();
-                String deviceAddress = device.getAddress();
-                entries[i] = deviceName;
-                entryValues[i] = deviceAddress;
-                list_device.add(deviceName);
-                i++;
-            }
-
-            listPreference.setEntries(entries);
-            listPreference.setEntryValues(entryValues);
-
-            listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-;
-                    EditTextPreference mac_address = (EditTextPreference)findPreference("macAddress");
-
-                    mac_address.setSummary((String) newValue.toString());
-                    mac_address.setText((String) newValue.toString());
-
-                    return false;
+                for (BluetoothDevice device : pairdDevices) {
+                    String deviceName = device.getName();
+                    String deviceAddress = device.getAddress();
+                    entries[i] = deviceName;
+                    entryValues[i] = deviceAddress;
+                    list_device.add(deviceName);
+                    i++;
                 }
-            });
+
+                listPreference.setEntries(entries);
+                listPreference.setEntryValues(entryValues);
+
+                listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        ;
+                        EditTextPreference mac_address = (EditTextPreference) findPreference("macAddress");
+
+                        mac_address.setSummary((String) newValue.toString());
+                        mac_address.setText((String) newValue.toString());
+
+                        return false;
+                    }
+                });
+            }
        }
     }
 

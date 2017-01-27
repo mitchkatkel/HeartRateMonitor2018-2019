@@ -39,6 +39,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
     private GraphView myGraphView;
 
     AsyncTask task;
+    private boolean isAsyncTaskCancelled = false;
 
     private int qrs[];
 
@@ -99,7 +100,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
      * Button to stop the test was pressed.
      */
     private void onStopButton() {
-        task.cancel(true);
+        isAsyncTaskCancelled = true;
     }
 
     /**
@@ -156,7 +157,14 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
      * Button to go back was pressed.
      */
     private void onBackButton() {
-
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            isAsyncTaskCancelled = true;
+            getFragmentManager().popBackStack();
+        }
+        else {
+            isAsyncTaskCancelled = true;
+            super.onBackPressed();
+        }
     }
 
     private class TestAsyncTask extends AsyncTask<String, String, Void> {
@@ -186,6 +194,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
             x = 0;
             while(read) {
                 try {
+                    if(isAsyncTaskCancelled == true){break;}
                     String[] line = reader.readLine().split(",");
                     y = Float.parseFloat(line[1]);
                     x++;
