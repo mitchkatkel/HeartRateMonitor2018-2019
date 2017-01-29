@@ -194,7 +194,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
             x = 0;
             while(read) {
                 try {
-                    if(isAsyncTaskCancelled == true){break;}
+                    if(isAsyncTaskCancelled){break;}
                     String[] line = reader.readLine().split(",");
                     y = Float.parseFloat(line[1]);
                     x++;
@@ -204,7 +204,6 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
                         Log.d("WAIT", "Waiting...");
                     }
                     catch(Exception e) {
-
                     }
                 }
                 catch(Exception e) {
