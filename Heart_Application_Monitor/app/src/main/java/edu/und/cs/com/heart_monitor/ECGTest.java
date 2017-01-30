@@ -12,10 +12,11 @@ import android.content.res.AssetManager;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
-import com.jjoe64.graphview.LineGraphView;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.*;
 
 import java.io.BufferedInputStream;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ import roboguice.activity.RoboActivity;
 
 public class ECGTest extends RoboActivity implements View.OnClickListener{
 
-    private GraphViewSeries signalValueSeries;
+    private LineGraphSeries signalValueSeries;
     private GraphView myGraphView;
 
     AsyncTask task;
@@ -49,14 +50,13 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
 
         //Changes x axis values of graph to seconds instead of frame number
         final java.text.DateFormat simpleDateFormatter = new SimpleDateFormat("mm:ss");
-        signalValueSeries = new GraphViewSeries(new GraphViewData[] {});
-        myGraphView = new LineGraphView(this, "Electrocardiograph");
+        signalValueSeries = new LineGraphSeries();
+        myGraphView = (GraphView)findViewById(R.id.graph);
         //Set graph options
         myGraphView.addSeries(signalValueSeries);
-        LinearLayout graphLayout = (LinearLayout) findViewById(R.id.graphLayout);
-        myGraphView.setManualYAxisBounds(200, -200);
-        graphLayout.addView(myGraphView);
-        myGraphView.setScrollable(true);
+        myGraphView.getViewport().setXAxisBoundsManual(true);
+        myGraphView.getViewport().setMinX(0);
+        myGraphView.getViewport().setMaxX(200);
 
         //Find the buttons by their ID
         final Button startButton = (Button) findViewById(R.id.startBTN);
@@ -219,12 +219,17 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
 
         @Override
         protected void onProgressUpdate(String... values) {
-            GraphViewData data = new GraphViewData(x, y);
+            DataPoint data = new DataPoint(x, y);
 
-            signalValueSeries.appendData(data, false, 200);
-            if(qrs[x] == 1)
+            signalValueSeries.appendData(data, true, 200);
+            if(qrs[x] == 1) {
                 Log.d("QRS", x + " IS QRS POINT.");
-            myGraphView.redrawAll();
+                PointsGraphSeries<DataPoint> point = new PointsGraphSeries<>(
+                        new DataPoint[] {
+                            new DataPoint(x, y)
+                        });
+                myGraphView.addSeries(point);
+            }
         }
     }
 }
