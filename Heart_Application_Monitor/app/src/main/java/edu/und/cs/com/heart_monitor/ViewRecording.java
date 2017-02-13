@@ -12,8 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 
 import java.util.ArrayList;
 
@@ -26,7 +24,7 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
     TextView txtFileName;
     FileHelper myFileHelper;
     ArrayList<Integer> myFileInfo;
-    GraphViewSeries dataValueSeries;
+
     GraphView myGraphView;
 
     @Override
@@ -36,14 +34,14 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
 
         myFileHelper = new FileHelper();
 
-        dataValueSeries = new GraphViewSeries(new GraphView.GraphViewData[] {});
+        /*dataValueSeries = new GraphViewSeries(new GraphView.GraphViewData[] {});
         myGraphView = new LineGraphView(this, "Electrocardiograph"){};
         lytGraphLayout = (LinearLayout) findViewById(R.id.graphLayoutTwo);
         myGraphView.addSeries(dataValueSeries);
         myGraphView.setManualYAxisBounds(900, 200);
         lytGraphLayout.addView(myGraphView);
         myGraphView.setViewPort(0,25);
-        myGraphView.setScrollable(true);
+        myGraphView.setScrollable(true);*/
 
 
         btnEmail = (Button) findViewById(R.id.emailBTN);
@@ -59,10 +57,10 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
         String fileName = myBundle.getString("fileName");
         txtFileName.setText("File: " + fileName);
         myFileInfo = myFileHelper.loadFile(fileName, this);
-        for(int i = 0; i < myFileInfo.size()/2; ++i){
+        /*for(int i = 0; i < myFileInfo.size()/2; ++i){
             dataValueSeries.appendData(new GraphView.GraphViewData(myFileInfo.get(i), myFileInfo.get(++i)), false, 10000);
         }
-        myGraphView.redrawAll();
+        myGraphView.redrawAll();*/
     }
 
     @Override

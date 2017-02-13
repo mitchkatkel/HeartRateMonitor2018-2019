@@ -1,5 +1,5 @@
 package edu.und.cs.com.heart_monitor;
-
+import android.util.Log;
 /**
  * Created by Jack Wolff on 1/22/2017.
  */
@@ -11,8 +11,8 @@ public class QRSDetection {
     public static final float HP_CONSTANT = (float) 1/M;
 
     // High pass filter
-// y1[n] = 1/M * Sum[m=0, M-1] x[n-m]
-// y2[n] = x[n - (M+1)/2]
+// y1[n] = 1/M * Sum[m=0, M-1] cur_x[n-m]
+// y2[n] = cur_x[n - (M+1)/2]
     public static float[] highPass(int[] sig0, int nsamp) {
         float[] highPass = new float[nsamp];
         float constant = (float) 1/M;
@@ -44,7 +44,6 @@ public class QRSDetection {
         return highPass;
     }
 
-    // Low pass filter; na n-to mesto zapiši kvadrat 30ih števil v oknu
     public static float[] lowPass(float[] sig0, int nsamp) {
         float[] lowPass = new float[nsamp];
         for(int i=0; i<sig0.length; i++) {

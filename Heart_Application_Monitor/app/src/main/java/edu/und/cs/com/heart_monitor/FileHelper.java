@@ -39,9 +39,9 @@ public class FileHelper {
         }
     }
 
-    //Gets FileOutputStream from FileHeler object and writes current x and y value to the file on their own line
+    //Gets FileOutputStream from FileHeler object and writes current cur_x and fileY value to the file on their own line
     public void appendFile(FileHelper myFileHelper, int xValue, int yValue, Context ctx){
-        String contents = xValue + "," + yValue + "\n";         //place and and y value on their own line in ouptut file
+        String contents = xValue + "," + yValue + "\n";         //place and and fileY value on their own line in ouptut file
         try {
             myFileHelper.fileOutputStream.write(contents.getBytes());
         }catch(Exception e){
@@ -59,7 +59,7 @@ public class FileHelper {
     }
 
     /*
-  * Opens file and parses it placing the x and y values into an Arraylist
+  * Opens file and parses it placing the cur_x and fileY values into an Arraylist
   * then returns array list
    */
     public ArrayList loadFile(String fileName, Context ctx) {

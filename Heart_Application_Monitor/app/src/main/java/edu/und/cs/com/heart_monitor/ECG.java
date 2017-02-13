@@ -25,10 +25,10 @@ import android.widget.Toast;
 import com.bitalino.comm.BITalinoDevice;
 import com.bitalino.comm.BITalinoFrame;
 
-import com.jjoe64.graphview.LineGraphView;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.*;
+import com.jjoe64.graphview.series.BaseSeries;
+import com.jjoe64.*;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.w3c.dom.Text;
 
@@ -49,7 +49,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     private static final boolean UPLOAD = false;
-    private GraphViewSeries signalValueSeries;
+    private LineGraphSeries signalValueSeries;
     private GraphView myGraphView;
     boolean runTest = true;
     boolean testFailed = false;
@@ -71,26 +71,26 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         //let user know it will take a few seconds to start getting readings
         makeText(this, "Establishing Connection to Sensor", Toast.LENGTH_LONG).show();
 
-        //Changes x axis values of graph to seconds instead of frame number
+        //Changes cur_x axis values of graph to seconds instead of frame number
         final java.text.DateFormat simpleDateFormatter = new SimpleDateFormat("mm:ss");
-        signalValueSeries = new GraphViewSeries(new GraphViewData[] {});
-        myGraphView = new LineGraphView(this, "Electrocardiograph"){
+        /*signalValueSeries = new GraphViewSeries(new GraphViewData[] {});
+        myGraphView = new GraphView(this, "Electrocardiograph"){
 
             @Override
             protected String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     // convert unix time to human time
                     return simpleDateFormatter.format(new Date((long) value*65));
-                } else return super.formatLabel(value, isValueX);                       // let the y-value be normal-formatted
+                } else return super.formatLabel(value, isValueX);                       // let the fileY-value be normal-formatted
             }
-        };
+        };*/
         //Set graph options
         myGraphView.addSeries(signalValueSeries);
         LinearLayout graphLayout = (LinearLayout) findViewById(R.id.graphLayout);
-        myGraphView.setManualYAxisBounds(900, 200);
+        //myGraphView.setManualYAxisBounds(900, 200);
         graphLayout.addView(myGraphView);
-        myGraphView.setScrollable(true);
-        //myGraphView.setShowHorizontalLabels(false);                                   //remove x axis labels
+        //myGraphView.setScrollable(true);
+        //myGraphView.setShowHorizontalLabels(false);                                   //remove cur_x axis labels
         myFileHelper = new FileHelper();
         myFileHelper.startFile(myFileHelper, getApplicationContext());
 
@@ -225,10 +225,10 @@ public class ECG extends RoboActivity implements View.OnClickListener {
             if(connectionFailure == true) {
                 Toast.makeText(getApplicationContext(),"Unable to establish connection", Toast.LENGTH_LONG).show();
             }else {
-                signalValueSeries.appendData(new GraphViewData(currentFrameNumber, currentValue), false, 200);
-                //update graph with new data value "appendData((x value, y value), notsure?, max number of points on graph)"
+                //signalValueSeries.appendData(new GraphViewData(currentFrameNumber, currentValue), false, 200);
+                //update graph with new data value "appendData((cur_x value, fileY value), notsure?, max number of points on graph)"
                 myFileHelper.appendFile(myFileHelper,currentFrameNumber / sampleRate, currentValue, getApplicationContext());
-                myGraphView.redrawAll();
+                //myGraphView.redrawAll();
             }
         }
 
