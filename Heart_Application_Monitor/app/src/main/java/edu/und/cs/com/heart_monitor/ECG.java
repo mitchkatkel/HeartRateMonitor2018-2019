@@ -71,7 +71,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         //let user know it will take a few seconds to start getting readings
         makeText(this, "Establishing Connection to Sensor", Toast.LENGTH_LONG).show();
 
-        //Changes x axis values of graph to seconds instead of frame number
+        //Changes cur_x axis values of graph to seconds instead of frame number
         final java.text.DateFormat simpleDateFormatter = new SimpleDateFormat("mm:ss");
         /*signalValueSeries = new GraphViewSeries(new GraphViewData[] {});
         myGraphView = new GraphView(this, "Electrocardiograph"){
@@ -81,7 +81,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 if (isValueX) {
                     // convert unix time to human time
                     return simpleDateFormatter.format(new Date((long) value*65));
-                } else return super.formatLabel(value, isValueX);                       // let the y-value be normal-formatted
+                } else return super.formatLabel(value, isValueX);                       // let the fileY-value be normal-formatted
             }
         };*/
         //Set graph options
@@ -90,7 +90,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         //myGraphView.setManualYAxisBounds(900, 200);
         graphLayout.addView(myGraphView);
         //myGraphView.setScrollable(true);
-        //myGraphView.setShowHorizontalLabels(false);                                   //remove x axis labels
+        //myGraphView.setShowHorizontalLabels(false);                                   //remove cur_x axis labels
         myFileHelper = new FileHelper();
         myFileHelper.startFile(myFileHelper, getApplicationContext());
 
@@ -226,7 +226,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 Toast.makeText(getApplicationContext(),"Unable to establish connection", Toast.LENGTH_LONG).show();
             }else {
                 //signalValueSeries.appendData(new GraphViewData(currentFrameNumber, currentValue), false, 200);
-                //update graph with new data value "appendData((x value, y value), notsure?, max number of points on graph)"
+                //update graph with new data value "appendData((cur_x value, fileY value), notsure?, max number of points on graph)"
                 myFileHelper.appendFile(myFileHelper,currentFrameNumber / sampleRate, currentValue, getApplicationContext());
                 //myGraphView.redrawAll();
             }

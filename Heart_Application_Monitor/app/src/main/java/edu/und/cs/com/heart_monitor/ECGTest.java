@@ -1,31 +1,24 @@
 package edu.und.cs.com.heart_monitor;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.app.Dialog;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.util.Log;
 import android.content.res.AssetManager;
 import android.content.DialogInterface;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.*;
 
-import java.io.BufferedInputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.io.File;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 import roboguice.activity.RoboActivity;
 
@@ -34,29 +27,40 @@ import roboguice.activity.RoboActivity;
  * Class used to test ECG readings without using the bitalino board.
  */
 
-public class ECGTest extends RoboActivity implements View.OnClickListener{
+public class ECGTest extends RoboActivity implements View.OnClickListener {
 
-    private LineGraphSeries signalValueSeries;
+    //Series that has been through the high and low pass filters
+    private LineGraphSeries highPassFilterSeries;
+    private LineGraphSeries lowPassFilterSeries;
+    //Series that reads directly from the file
+    private LineGraphSeries fileSeries;
     private GraphView myGraphView;
 
     AsyncTask task;
     private boolean isAsyncTaskCancelled = false;
 
-    private int qrs[];
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_test);
 
-        //Changes x axis values of graph to seconds instead of frame number
+        //Changes cur_x axis values of graph to seconds instead of frame number
         final java.text.DateFormat simpleDateFormatter = new SimpleDateFormat("mm:ss");
-        signalValueSeries = new LineGraphSeries();
+        highPassFilterSeries = new LineGraphSeries();
+        lowPassFilterSeries = new LineGraphSeries();
+        fileSeries = new LineGraphSeries();
+        fileSeries.setColor(Color.RED);
+        lowPassFilterSeries.setColor(Color.GREEN);
         myGraphView = (GraphView)findViewById(R.id.graph);
+        myGraphView.addSeries(highPassFilterSeries);
+        myGraphView.addSeries(fileSeries);
+        myGraphView.addSeries(lowPassFilterSeries);
         //Set graph options
-        myGraphView.addSeries(signalValueSeries);
         myGraphView.getViewport().setXAxisBoundsManual(true);
+        myGraphView.getViewport().setYAxisBoundsManual(true);
         myGraphView.getViewport().setMinX(0);
         myGraphView.getViewport().setMaxX(200);
+        myGraphView.getViewport().setMinY(-100);
+        myGraphView.getViewport().setMaxY(200);
 
         //Find the buttons by their ID
         final Button startButton = (Button) findViewById(R.id.startBTN);
@@ -111,20 +115,6 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
         try {
             AssetManager mnger = getAssets();
             InputStream stream = mnger.open("samples/Sample1.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            float y;
-            int sam = 10000;
-            int[] list = new int[sam];
-            String[] t = new String[sam];
-            String[] line;
-            for (int x = 0; x < sam; x++) {
-                line = reader.readLine().split(",");
-                list[x] = Integer.parseInt(line[1]);
-                t[x] = line[0];
-            }
-            float[] pass = QRSDetection.highPass(list, sam);
-            float[] low = QRSDetection.lowPass(pass, sam);
-            qrs = QRSDetection.QRS(low, sam);
         }
         catch(Exception e) {
             Log.d("TAG", e.getMessage());
@@ -168,8 +158,17 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
     }
 
     private class TestAsyncTask extends AsyncTask<String, String, Void> {
-        int x;
-        float y;
+        //Current cur_x value in the graph
+        int cur_x;
+
+        private final int sample = 250;
+
+        private int[] qrs;
+        private float[] highFilter;
+        private float[] lowFilter;
+        private int[] file;
+
+        BufferedReader reader;
         /**
          * Read from the file and update the graph.
          * @param params A single array containing the filename
@@ -179,8 +178,8 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
             //Get the filename and open the file for parsing
             String fileName = params[0];
             AssetManager mnger = getAssets();
-            BufferedReader reader = null;
-
+            //Start at 0
+            cur_x = 0;
             try {
                 InputStream stream = mnger.open("samples/"+fileName);
                 reader = new BufferedReader(new InputStreamReader(stream));
@@ -189,22 +188,25 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
                 task.cancel(true);
                 return null;
             }
+            readFromFile();
 
             boolean read = true;
-            x = 0;
+
             while(read) {
                 try {
+                    //If this task has been cancelled, stop immediately
                     if(isAsyncTaskCancelled){break;}
-                    String[] line = reader.readLine().split(",");
-                    y = Float.parseFloat(line[1]);
-                    x++;
+                    //Plot the points
                     publishProgress();
                     try {
-                        Thread.sleep(25);
+                        Thread.sleep(5);
                         Log.d("WAIT", "Waiting...");
                     }
                     catch(Exception e) {
                     }
+                    cur_x++;
+                    if(cur_x % sample == 0)
+                        readFromFile();
                 }
                 catch(Exception e) {
                     read = false;
@@ -212,21 +214,41 @@ public class ECGTest extends RoboActivity implements View.OnClickListener{
                 }
             }
 
-
             task.cancel(true);
             return null;
         }
 
+        private void readFromFile() {
+            file = new int[sample];
+            String[] line;
+            for (int x = 0; x < sample; x++) {
+                try {
+                    line = reader.readLine().split(",");
+                    file[x] = Integer.parseInt(line[1]);
+                }
+                catch(Exception e) {
+                    Log.d("ECGTest", e.getMessage());
+                }
+            }
+
+            highFilter = QRSDetection.highPass(file, sample);
+            lowFilter = QRSDetection.lowPass(highFilter, sample);
+            qrs = QRSDetection.QRS(lowFilter, sample);
+        }
+
         @Override
         protected void onProgressUpdate(String... values) {
-            DataPoint data = new DataPoint(x, y);
-
-            signalValueSeries.appendData(data, true, 200);
-            if(qrs[x] == 1) {
-                Log.d("QRS", x + " IS QRS POINT.");
+            //DataPoint from the file
+            DataPoint fileDataPoint = new DataPoint(cur_x, file[cur_x % sample]);
+            DataPoint ecgDetectPoint = new DataPoint(cur_x, highFilter[cur_x % sample]);
+            DataPoint lowFilterPoint = new DataPoint(cur_x, lowFilter[cur_x % sample]);
+            fileSeries.appendData(fileDataPoint, true, 200);
+            highPassFilterSeries.appendData(ecgDetectPoint, true, 200);
+            lowPassFilterSeries.appendData(lowFilterPoint, true, 200);
+            if(qrs[cur_x % sample] == 1) {
                 PointsGraphSeries<DataPoint> point = new PointsGraphSeries<>(
                         new DataPoint[] {
-                            new DataPoint(x, y)
+                            new DataPoint(cur_x, file[cur_x % sample])
                         });
                 myGraphView.addSeries(point);
             }
