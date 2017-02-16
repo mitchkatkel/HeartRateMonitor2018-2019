@@ -12,11 +12,12 @@ public class ECGData {
     private ArrayList<Integer> rawList = new ArrayList<Integer>(250);
     private ArrayList<Integer> LPList = new ArrayList<Integer>(250);
     private ArrayList<Integer> HPList = new ArrayList<Integer>(250);
-    //private ArrayList<Integer> HPList = new ArrayList<Integer>(250); time list
 
-    public void addPoint(int rawValue, int yValue) {
-        rawList.add(yValue);
-        //yList.add(xValue);
+    private ArrayList<Integer> timeList = new ArrayList<Integer>(250);
+
+    public void addPoint(int timeValue, int rawValue) {
+        rawList.add(rawValue);
+        timeList.add(timeValue);
         lowPass();
         highPass();
     }
@@ -47,7 +48,7 @@ public class ECGData {
         x32 = LPList.get(LPList.size() - 32);
         y1 = HPList.get(HPList.size() - 1);
         y = 32*x16 - (y1 + x - x32);
-        HPList.add(HPList.size(), y);
+        HPList.add(y);
     }
 
 
