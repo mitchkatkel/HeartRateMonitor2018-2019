@@ -136,6 +136,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
             builder.show();
         }
         catch(Exception e) {
+            Log.d("TAG", e.getMessage());
         }
     }
 
@@ -200,6 +201,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
                         Log.d("WAIT", "Waiting...");
                     }
                     catch(Exception e) {
+                        Log.d("TAG", e.getMessage());
                     }
                     cur_x++;
                     if(cur_x % sample == 0)
