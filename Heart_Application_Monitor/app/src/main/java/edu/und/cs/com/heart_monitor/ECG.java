@@ -3,44 +3,26 @@ package edu.und.cs.com.heart_monitor;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.bitalino.comm.BITalinoDevice;
 import com.bitalino.comm.BITalinoFrame;
-
-import com.jjoe64.graphview.*;
-import com.jjoe64.graphview.series.BaseSeries;
-import com.jjoe64.*;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import org.w3c.dom.Text;
-
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
-import edu.und.cs.com.heart_monitor.R;
-import retrofit.RestAdapter;
-import retrofit.client.Response;
 import roboguice.activity.RoboActivity;
 
 import static android.widget.Toast.makeText;
@@ -73,6 +55,9 @@ public class ECG extends RoboActivity implements View.OnClickListener {
 
         //Changes cur_x axis values of graph to seconds instead of frame number
         final java.text.DateFormat simpleDateFormatter = new SimpleDateFormat("mm:ss");
+        signalValueSeries = new LineGraphSeries();
+        myGraphView =new GraphView(this);
+        //TODO need to investigate what this chunk was doing further
         /*signalValueSeries = new GraphViewSeries(new GraphViewData[] {});
         myGraphView = new GraphView(this, "Electrocardiograph"){
 
@@ -84,11 +69,16 @@ public class ECG extends RoboActivity implements View.OnClickListener {
                 } else return super.formatLabel(value, isValueX);                       // let the fileY-value be normal-formatted
             }
         };*/
+        myGraphView = (GraphView)findViewById(R.id.graphLayout);
         //Set graph options
         myGraphView.addSeries(signalValueSeries);
-        LinearLayout graphLayout = (LinearLayout) findViewById(R.id.graphLayout);
-        //myGraphView.setManualYAxisBounds(900, 200);
-        graphLayout.addView(myGraphView);
+        //Set graph options
+        myGraphView.getViewport().setXAxisBoundsManual(true);
+        myGraphView.getViewport().setYAxisBoundsManual(true);
+        myGraphView.getViewport().setMinX(0);
+        myGraphView.getViewport().setMaxX(200);
+        myGraphView.getViewport().setMinY(200);
+        myGraphView.getViewport().setMaxY(900);
         //myGraphView.setScrollable(true);
         //myGraphView.setShowHorizontalLabels(false);                                   //remove cur_x axis labels
         myFileHelper = new FileHelper();
@@ -118,7 +108,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
             case R.id.startBTN:
                 runTest = false;                                                                                    //ensure current test terminates correctly
                 myFileHelper.closeFile(myFileHelper, getApplicationContext());                                       //close file output stream
-                if(keepFile != true) getApplicationContext().deleteFile(myFileHelper.fileName);
+                if(!keepFile) getApplicationContext().deleteFile(myFileHelper.fileName);
                 startActivity(new Intent(ECG.this, ECG.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 break;
             case R.id.quitBTN:
@@ -128,18 +118,18 @@ public class ECG extends RoboActivity implements View.OnClickListener {
             case R.id.backBTN:
                 runTest = false;
                 myFileHelper.closeFile(myFileHelper, getApplicationContext());
-                if(keepFile != true) getApplicationContext().deleteFile(myFileHelper.fileName);
+                if(!keepFile) getApplicationContext().deleteFile(myFileHelper.fileName);
                 android.os.Process.killProcess(android.os.Process.myPid());
                 startActivity(new Intent(ECG.this, MainActivity.class));
                 break;
             case R.id.storeBTN:
-                if((runTest == true)&&(testFailed == false)&&(testInitiated == true)){                              //test is still running
+                if((runTest)&&(!testFailed)&&(testInitiated)){                              //test is still running
                     Toast.makeText(this, "Stop test first!", Toast.LENGTH_LONG).show();
-                }else if((runTest == false)&&(testFailed == false)&&(testInitiated == true)){                       //test has run successfully, has stopped, can store file
+                }else if((!runTest)&&(!testFailed)&&(testInitiated)){                       //test has run successfully, has stopped, can store file
                     Toast.makeText(this, "File " + myFileHelper.fileName + " created", Toast.LENGTH_LONG).show();
                     keepFile = true;
                     myFileHelper.closeFile(myFileHelper, getApplicationContext());
-                }else if((runTest == false)&&(testFailed == true)&&(testInitiated == false)){                       //test is not running and an error of some kind occurred
+                }else if((!runTest)&&(testFailed)&&(!testInitiated)){                       //test is not running and an error of some kind occurred
                     Toast.makeText(this, "No recording made", Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -158,8 +148,8 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         private BluetoothDevice dev = null;
         private BluetoothSocket sock = null;
         private BITalinoDevice bitalino;
-        public int currentValue = 0;
-        public int currentFrameNumber = 0;
+        int currentValue = 0;
+        int currentFrameNumber = 0;
         SharedPreferences getPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String macAddress = getPreference.getString("macAddress",null );
         private final int ecgChannel = 1;
@@ -222,13 +212,13 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         @Override
         protected void onProgressUpdate(String... values) {
             //If the connection has failed, show a message
-            if(connectionFailure == true) {
+            if(connectionFailure) {
                 Toast.makeText(getApplicationContext(),"Unable to establish connection", Toast.LENGTH_LONG).show();
             }else {
-                //signalValueSeries.appendData(new GraphViewData(currentFrameNumber, currentValue), false, 200);
+                //TODO do I want false signalValueSeries.appendData(new GraphViewData(currentFrameNumber, currentValue), false, 200);
+                signalValueSeries.appendData(new DataPoint(currentFrameNumber, currentValue), true,200);
                 //update graph with new data value "appendData((cur_x value, fileY value), notsure?, max number of points on graph)"
                 myFileHelper.appendFile(myFileHelper,currentFrameNumber / sampleRate, currentValue, getApplicationContext());
-                //myGraphView.redrawAll();
             }
         }
 
@@ -236,9 +226,9 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         protected void onCancelled() {
             // stop acquisition and close bluetooth connection
             try {
-                // bitalino.stop();         //signal board to quit sending packets
-                InputStream is = null;      //close input and output streams
-                OutputStream os = null;
+                bitalino.stop();         //signal board to quit sending packets
+                //InputStream is = null;      //close input and output streams
+                //OutputStream os = null;
                 sock.close();               //close socket on this end
             } catch (Exception e) {
                 Log.e(TAG, "There was an error.", e);
