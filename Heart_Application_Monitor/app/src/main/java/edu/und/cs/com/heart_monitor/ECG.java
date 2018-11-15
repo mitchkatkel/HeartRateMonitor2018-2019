@@ -76,9 +76,9 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         myGraphView.getViewport().setXAxisBoundsManual(true);
         myGraphView.getViewport().setYAxisBoundsManual(true);
         myGraphView.getViewport().setMinX(0);
-        myGraphView.getViewport().setMaxX(200);
-        myGraphView.getViewport().setMinY(200);
-        myGraphView.getViewport().setMaxY(900);
+        myGraphView.getViewport().setMaxX(100);
+        myGraphView.getViewport().setMaxY(1000);
+        myGraphView.getViewport().setMinY(100);
         //myGraphView.setScrollable(true);
         //myGraphView.setShowHorizontalLabels(false);                                   //remove cur_x axis labels
         myFileHelper = new FileHelper();
@@ -153,7 +153,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
         SharedPreferences getPreference = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String macAddress = getPreference.getString("macAddress",null );
         private final int ecgChannel = 1;
-        private final int sampleRate = 8;
+        private final int sampleRate = 60;
 
         protected Void doInBackground(Void... paramses) {
             try {
@@ -215,8 +215,7 @@ public class ECG extends RoboActivity implements View.OnClickListener {
             if(connectionFailure) {
                 Toast.makeText(getApplicationContext(),"Unable to establish connection", Toast.LENGTH_LONG).show();
             }else {
-                //TODO do I want false signalValueSeries.appendData(new GraphViewData(currentFrameNumber, currentValue), false, 200);
-                signalValueSeries.appendData(new DataPoint(currentFrameNumber, currentValue), true,200);
+                signalValueSeries.appendData(new DataPoint(currentFrameNumber, currentValue), true,110);
                 //update graph with new data value "appendData((cur_x value, fileY value), notsure?, max number of points on graph)"
                 myFileHelper.appendFile(myFileHelper,currentFrameNumber / sampleRate, currentValue, getApplicationContext());
             }

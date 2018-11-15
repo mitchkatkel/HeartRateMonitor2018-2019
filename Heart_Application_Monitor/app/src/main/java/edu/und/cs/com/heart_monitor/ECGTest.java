@@ -1,22 +1,21 @@
 package edu.und.cs.com.heart_monitor;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.util.Log;
-import android.content.res.AssetManager;
-import android.content.DialogInterface;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.io.InputStream;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import roboguice.activity.RoboActivity;
@@ -29,8 +28,8 @@ import roboguice.activity.RoboActivity;
 public class ECGTest extends RoboActivity implements View.OnClickListener {
 
     //Series that has been through the high and low pass filters
-    private LineGraphSeries highPassFilterSeries;
-    private LineGraphSeries lowPassFilterSeries;
+    //private LineGraphSeries highPassFilterSeries;
+    //private LineGraphSeries lowPassFilterSeries;
     //Series that reads directly from the file
     private LineGraphSeries fileSeries;
     private GraphView myGraphView;
@@ -42,22 +41,22 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_test);
 
-        highPassFilterSeries = new LineGraphSeries();
-        lowPassFilterSeries = new LineGraphSeries();
+        //highPassFilterSeries = new LineGraphSeries();
+        //lowPassFilterSeries = new LineGraphSeries();
         fileSeries = new LineGraphSeries();
         fileSeries.setColor(Color.RED);
-        lowPassFilterSeries.setColor(Color.GREEN);
+        //lowPassFilterSeries.setColor(Color.GREEN);
         myGraphView = (GraphView)findViewById(R.id.graph);
-        myGraphView.addSeries(highPassFilterSeries);
+        //myGraphView.addSeries(highPassFilterSeries);
         myGraphView.addSeries(fileSeries);
-        myGraphView.addSeries(lowPassFilterSeries);
+        //myGraphView.addSeries(lowPassFilterSeries);
         //Set graph options
         myGraphView.getViewport().setXAxisBoundsManual(true);
         myGraphView.getViewport().setYAxisBoundsManual(true);
-        myGraphView.getViewport().setMinX(0);
-        myGraphView.getViewport().setMaxX(200);
+        myGraphView.getViewport().setMinX(100);
+        myGraphView.getViewport().setMaxX(5000);
         myGraphView.getViewport().setMinY(-100);
-        myGraphView.getViewport().setMaxY(200);
+        myGraphView.getViewport().setMaxY(150);
 
         //Find the buttons by their ID
         final Button startButton = (Button) findViewById(R.id.startBTN);
@@ -159,7 +158,7 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
         //Current cur_x value in the graph
         int cur_x;
 
-        private final int sample = 250;
+        private final int sample = 500;
 
         private int[] qrs;
         private float[] highFilter;
@@ -196,12 +195,13 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
                     if(isAsyncTaskCancelled){break;}
                     //Plot the points
                     publishProgress();
-                    try {
-                        Thread.sleep(5);
-                        Log.d("WAIT", "Waiting...");
-                    }
-                    catch(Exception e) {
-                        Log.d("TAG", e.getMessage());
+                    if (cur_x%50 == 0) {
+                        try {
+                            Thread.sleep(0, 1);
+                            //Log.d("WAIT", "Waiting...");
+                        } catch (Exception e) {
+                            //Log.d("TAG", e.getMessage());
+                        }
                     }
                     cur_x++;
                     if(cur_x % sample == 0)
@@ -230,27 +230,27 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
                 }
             }
 
-            highFilter = QRSDetection.highPass(file, sample);
-            lowFilter = QRSDetection.lowPass(highFilter, sample);
-            qrs = QRSDetection.QRS(lowFilter, sample);
+            //highFilter = QRSDetection.highPass(file, sample);
+            //lowFilter = QRSDetection.lowPass(highFilter, sample);
+            //qrs = QRSDetection.QRS(lowFilter, sample);
         }
 
         @Override
         protected void onProgressUpdate(String... values) {
             //DataPoint from the file
             DataPoint fileDataPoint = new DataPoint(cur_x, file[cur_x % sample]);
-            DataPoint ecgDetectPoint = new DataPoint(cur_x, highFilter[cur_x % sample]);
-            DataPoint lowFilterPoint = new DataPoint(cur_x, lowFilter[cur_x % sample]);
-            fileSeries.appendData(fileDataPoint, true, 200);
-            highPassFilterSeries.appendData(ecgDetectPoint, true, 200);
-            lowPassFilterSeries.appendData(lowFilterPoint, true, 200);
-            if(qrs[cur_x % sample] == 1) {
+            //DataPoint ecgDetectPoint = new DataPoint(cur_x, highFilter[cur_x % sample]);
+            //DataPoint lowFilterPoint = new DataPoint(cur_x, lowFilter[cur_x % sample]);
+            fileSeries.appendData(fileDataPoint, true, 5000);
+            //highPassFilterSeries.appendData(ecgDetectPoint, true, 200);
+            //lowPassFilterSeries.appendData(lowFilterPoint, true, 200);
+            /*if(qrs[cur_x % sample] == 1) {
                 PointsGraphSeries<DataPoint> point = new PointsGraphSeries<>(
                         new DataPoint[] {
-                            new DataPoint(cur_x, file[cur_x % sample])
+                                new DataPoint(cur_x, file[cur_x % sample])
                         });
                 myGraphView.addSeries(point);
-            }
+            }*/
         }
     }
 }
