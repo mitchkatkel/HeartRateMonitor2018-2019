@@ -1,7 +1,6 @@
 package edu.und.cs.com.heart_monitor;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -63,9 +62,7 @@ public class FileHelper {
   * then returns array list
    */
     public ArrayList loadFile(String fileName, Context ctx) {
-        int xValue = 0;
         int yValue = 0;
-        String nextNum = "";
         ArrayList<Integer> myFileInfo = new ArrayList<>();
         StringBuffer fileContent = new StringBuffer("");
         FileInputStream fis;
@@ -77,11 +74,8 @@ public class FileHelper {
                 int lineCount = 0;
                 while ((line = reader.readLine()) != null) {    //reads on line at a time
                     String[] RowData = line.split(",");         //splits line at comma
-                    if(lineCount == 0) RowData[0] = "0";        //ensure first character is read correctly and not null0
-                    xValue = Integer.parseInt(RowData[0]);
                     yValue = Integer.parseInt(RowData[1]);
                     lineCount++;
-                    myFileInfo.add(xValue);
                     myFileInfo.add(yValue);
                 }
             }catch (IOException ex) {
@@ -98,5 +92,9 @@ public class FileHelper {
             e.printStackTrace();
         }
         return myFileInfo;
+    }
+
+    public Boolean deleteFile(String fileName, Context ctx) {
+        return ctx.deleteFile(fileName);
     }
 }

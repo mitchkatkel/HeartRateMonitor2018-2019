@@ -12,10 +12,16 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="196dp"
-        android:layout_weight="0.03"
-        android:id="@+id/graphLayoutTwo"
+        android:layout_weight="0.24"
         android:background="#ffffff"
-        android:layout_marginBottom="30dp"></LinearLayout>
+        android:layout_marginTop="20dp">
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/graphLayouttwo" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="fill_parent"
@@ -42,11 +48,15 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/deleteBTN"
+            android:text="@string/delete_button"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:text="@string/back_button"
             android:id="@+id/backBTN" />
     </LinearLayout>
 
 </LinearLayout>
-
-
-
