@@ -1,28 +1,23 @@
 package edu.und.cs.com.heart_monitor;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Set;
-
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,9 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Set;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
@@ -219,18 +218,33 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 
-    public static class TFragment extends Fragment {
-        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,Bundle savedInstanceState) {
+    public static class TFragment  extends Fragment implements  AdapterView.OnItemClickListener {
+        ListView reportsList;                                                                //reference to listview that contains recorded ECG sessions
+        ArrayList<String> fileNames = new ArrayList();                                       //stores names of current files in internal directory
+        ArrayAdapter myArrayAdapter;                                                         //allows ListView object to me updated using information gathered
+
+        @Override
+        public View onCreateView( LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
             final View rootView = inflater.inflate(R.layout.fragment_start_test, container, false);
-            rootView.findViewById(R.id.startBTN).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view){
-                Intent intent = new Intent(getActivity(), ECGTest.class);
-                startActivity(intent);
-                }
-            });
+            fileNames.clear();
+            myArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,android.R.id.text1, fileNames);
+            reportsList = (ListView) rootView.findViewById(R.id.lstvFiles);
+            reportsList.setOnItemClickListener(this);
+            //fileNames.add("Sample1-Filtered-Extended.txt");
+            fileNames.add("Sample2-Unfiltered-Extended.txt");
+            fileNames.add("Sample2-Filtered-Extended.txt");
+            reportsList.setAdapter(myArrayAdapter);
 
             return rootView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Bundle myBundle = new Bundle();                                                 //Bundle fileName to send to ViewRecording Activity
+            myBundle.putString("fileName",fileNames.get(position));
+            Intent newIntent = new Intent(getActivity(),ECGTest.class);
+            newIntent.putExtras(myBundle);
+            startActivity(newIntent);
         }
     }
 
@@ -281,7 +295,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
        }
     }
 
-    public static class RFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+    public static class RFragment extends Fragment implements  AdapterView.OnItemClickListener {
         ListView reportsList;                                                                //reference to listview that contains recorded ECG sessions
         File fileDir;                                                                        //reference to internal file directory
         File[] filesList;                                                                    //used to store list of internal files
@@ -296,7 +310,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             myArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,android.R.id.text1, fileNames);
             reportsList = (ListView) rootView.findViewById(R.id.lstvECGFiles);
             reportsList.setOnItemClickListener(this);
-            reportsList.setOnItemLongClickListener(this);
             fileDir = getActivity().getApplicationContext().getFilesDir();                  //retrieve reference internal file directory
             filesList = fileDir.listFiles();                                                //retrieve list of existing files
             if(filesList != null){
@@ -316,15 +329,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Intent newIntent = new Intent(getActivity(),ViewRecording.class);
             newIntent.putExtras(myBundle);
             startActivity(newIntent);
-        }
-
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            getActivity().getApplicationContext().deleteFile(fileNames.get(position));      //delete file from internal file directory
-            ((BaseAdapter)reportsList.getAdapter()).notifyDataSetChanged();                 //MAY NOT BE NEEDED CHECK LATER
-            fileNames.remove(position);                                                     //delete unwanted file
-            myArrayAdapter.notifyDataSetChanged();                                          //update UI ListView
-            return false;
         }
     }
 
