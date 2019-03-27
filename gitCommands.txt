@@ -39,6 +39,18 @@ Git Commands:
 		git merge <branchName>
     
 		git push origin File-systems
+		
+	Merge File-systems into current development branch:
+	
+		git fetch origin
+		
+		git checkout master
+		
+		git merge --ff-only origin/master
+		
+		git checkout dmgr2
+		
+		git merge --no-ff origin/master
   
 
 https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet
