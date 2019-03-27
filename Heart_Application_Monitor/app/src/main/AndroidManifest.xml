@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -27,8 +28,15 @@
         <activity
             android:name=".ECG"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_ecg" >
-        </activity>
+            android:label="@string/title_activity_ecg"></activity>
+        <activity
+            android:name=".AnalyzeECG"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_analyze_ecg"></activity>
+        <activity
+            android:name=".DisplayECG"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_display_ecg"></activity>
         <activity
             android:name=".UserData"
             android:screenOrientation="portrait"

@@ -15,10 +15,11 @@
         android:background="#ffffff"
         android:layout_marginTop="20dp">
 
-        <com.jjoe64.graphview.GraphView
+        <pl.droidsonroids.gif.GifImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/graphLayout" />
+            android:src="@drawable/heart_rate_loader"
+            android:id="@+id/heart_gif" />
 
     </LinearLayout>
 
@@ -48,15 +49,8 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/store_button"
-            android:id="@+id/storeBTN"
-            android:layout_marginBottom="10dp" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/back_button"
-            android:id="@+id/backBTN" />
+            android:text="@string/cancel_button"
+            android:id="@+id/cancelBTN" />
     </LinearLayout>
 
 </LinearLayout>
