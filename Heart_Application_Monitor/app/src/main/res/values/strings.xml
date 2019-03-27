@@ -21,7 +21,6 @@
     <string name="user_pemergency">Phone</string>
     <string name="user_eemergency">Email</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="home_fragment">Welcome</string>
     <string name="user_fragment">User Settings</string>
     <string name="report_fragment">Reports</string>
@@ -29,18 +28,21 @@
     <string name="title_activity_test">Test</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_ecg">ECG</string>
+    <string name="title_activity_analyze_ecg">Analyze ECG</string>
+    <string name="title_activity_display_ecg">Display ECG</string>
     <string name="title_activity_user2">User2</string>
     <string name="title_activity_user_data">UserData</string>
     <string name="welcome">Welcome back!</string>
     <string name="title_activity_ecg_graph">ecg_graph</string>
-    <string name="start_button">Restart</string>
+    <string name="start_button">Start/Restart</string>
     <string name="back_button">Back</string>
+    <string name="cancel_button">Cancel</string>
     <string name="ecg_button">Run ECG</string>
     <string name="user_info_button">User Information</string>
     <string name="quit_button">Quit</string>
     <string name="stop_button">Stop</string>
     <string name="check_signal_button">Check Signal Strength</string>
-    <string name="email_button">Send E-mail</string>
+    <string name="share_button">Share</string>
     <string name="delete_button">Delete</string>
     <string name="submit_button">Submit</string>
     <string name="store_button">Store Reading</string>
@@ -48,7 +50,7 @@
     <string name="title_activity_user_info">user_info</string>
     <string name="user_title">User Information</string>
     <string name="device_selected">Heart Sensor:</string>
-    <string name="store_reading">Store Reading</string>
+    <string name="store_reading">Save</string>
     <string name="select_sensor">Please select sensor device</string>
 <!--<<<<<<< HEAD-->
     <string name="files_stored">Stored ECG Recordings</string>
@@ -60,6 +62,9 @@
     <string name="home_screen_checklist_item4">4) Sit or lay down</string>
 <!--=======-->
     <string name="title_activity_pref_user">PrefUser</string>
-<!-->>>>>>>> origin/combined-->
+    <string name="analyzing_data">Analyzing Data</string>
+    <string name="file_name_holder">FILE NAME GOES HERE</string>
+    <string name="analysis_messages_holder">Analysis Messages Go Here</string>
+    <!-->>>>>>>> origin/combined-->
 
 </resources>

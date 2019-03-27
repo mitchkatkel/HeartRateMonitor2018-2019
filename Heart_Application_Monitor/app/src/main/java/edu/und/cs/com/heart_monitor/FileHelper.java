@@ -20,14 +20,15 @@ public class FileHelper {
     FileOutputStream fileOutputStream;
 
     //Opens FileOutputStream and generates filename from current time and date and stores them both in FileHelper Object
-    public void startFile(FileHelper myFileHelper, Context ctx) {
+    public void startFile(FileHelper myFileHelper, Context ctx, Boolean isFiltered) {
         Calendar calendar = Calendar.getInstance();                                          //get calendar object to retrieve date and time info for file name
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
         int hour = calendar.get(Calendar.HOUR);
         int min = calendar.get(Calendar.MINUTE);
         int sec = calendar.get(Calendar.SECOND);
-        String tempFileName = (month + "_" + day + "_" + hour + "_" + min + "_" + sec);     //combine date and time info into string for file name
+        String filterStatus = isFiltered ? "" : "unfiltered";
+        String tempFileName = (month + "_" + day + "_" + hour + "_" + min + "_" + sec + filterStatus + ".csv");     //combine date and time info into string for file name
         myFileHelper.fileName = tempFileName;
         try {
             FileOutputStream fOut = ctx.openFileOutput(tempFileName, Context.MODE_PRIVATE);
