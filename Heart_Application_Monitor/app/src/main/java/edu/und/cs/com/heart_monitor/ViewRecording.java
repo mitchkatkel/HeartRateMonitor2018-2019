@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,7 +48,7 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
         myGraphView.getViewport().setXAxisBoundsManual(true);
         myGraphView.getViewport().setYAxisBoundsManual(true);
         myGraphView.getViewport().setMinX(0);
-        myGraphView.getViewport().setMaxX(1000);//TODO not sure if this is actually right
+        myGraphView.getViewport().setMaxX(2000);
         myGraphView.getViewport().setMaxY(1000);
         myGraphView.getViewport().setMinY(100);
         myGraphView.getViewport().setScrollable(true);
@@ -101,18 +102,16 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
                 android.os.Process.killProcess(android.os.Process.myPid());
                 break;
             case R.id.shareBTN:
-                //TODO this doesn't fully work yet
                 Intent oldIntent = getIntent();
                 Bundle myBundle = oldIntent.getExtras();
-                String fileName = myBundle.getString("fileName");
 
-                String temp_path = fileName;
-                File F = new File(this.getFilesDir(), temp_path);
-                Uri U = Uri.fromFile(F);
+                String fileName = myBundle.getString("fileName");
+                File F = new File(this.getFilesDir(), fileName);
+                Uri U = FileProvider.getUriForFile(this, "com.package.name.fileprovider", F);
 
                 Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/csv");
-                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, fileName);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setDataAndType(U, "text/csv");
                 intent.putExtra(Intent.EXTRA_STREAM, U);
                 startActivity(Intent.createChooser(intent, "Choose sharing method"));
 
