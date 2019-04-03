@@ -47,7 +47,7 @@ public class DisplayECG extends ActionBarActivity implements View.OnClickListene
         myGraphView.getViewport().setXAxisBoundsManual(true);
         myGraphView.getViewport().setYAxisBoundsManual(true);
         myGraphView.getViewport().setMinX(0);
-        myGraphView.getViewport().setMaxX(1000);//TODO not sure if this is actually right
+        myGraphView.getViewport().setMaxX(2000);
         myGraphView.getViewport().setMaxY(1000);
         myGraphView.getViewport().setMinY(100);
         myGraphView.getViewport().setScrollable(true);

@@ -14,7 +14,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 
 import roboguice.activity.RoboActivity;
 
@@ -36,22 +35,8 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_test);
 
-        //Changes cur_x axis values of graph to seconds instead of frame number
-        final java.text.DateFormat simpleDateFormatter = new SimpleDateFormat("mm:ss");
         fileSeries = new LineGraphSeries();
         myGraphView = new GraphView(this);
-        //TODO need to investigate what this chunk was doing further
-        /*signalValueSeries = new GraphViewSeries(new GraphViewData[] {});
-        myGraphView = new GraphView(this, "Electrocardiograph"){
-
-            @Override
-            protected String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    // convert unix time to human time
-                    return simpleDateFormatter.format(new Date((long) value*65));
-                } else return super.formatLabel(value, isValueX);                       // let the fileY-value be normal-formatted
-            }
-        };*/
         myGraphView = (GraphView) findViewById(R.id.graph);
         //Set graph options
         myGraphView.addSeries(fileSeries);
