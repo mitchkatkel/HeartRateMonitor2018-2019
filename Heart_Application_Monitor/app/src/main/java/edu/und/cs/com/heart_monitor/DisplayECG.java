@@ -3,10 +3,7 @@ package edu.und.cs.com.heart_monitor;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,13 +16,15 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.io.File;
 import java.util.ArrayList;
 
-public class ViewRecording extends ActionBarActivity implements View.OnClickListener {
+public class DisplayECG extends ActionBarActivity implements View.OnClickListener {
 
-    Button btnBack, btnShare, btnDelete;
+    Button btnBack, btnSave, btnDelete;
     TextView txtFileName;
+    TextView txtWarningMessage;
+
+    Boolean fileSaved = false;
     FileHelper myFileHelper;
     ArrayList<Integer> myFileInfo;
 
@@ -35,13 +34,13 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_recording);
+        setContentView(R.layout.activity_display_ecg);
 
         myFileHelper = new FileHelper();
 
         dataValueSeries = new LineGraphSeries();
         myGraphView = new GraphView(this);
-        myGraphView = (GraphView) findViewById(R.id.graphLayouttwo);
+        myGraphView = (GraphView) findViewById(R.id.graphLayout);
         //Set graph options
         myGraphView.addSeries(dataValueSeries);
         //Set graph options
@@ -56,22 +55,26 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
         myGraphView.getViewport().setScalable(true);
 
 
-        btnShare = (Button) findViewById(R.id.shareBTN);
+        btnSave = (Button) findViewById(R.id.storeBTN);
         btnDelete = (Button) findViewById(R.id.deleteBTN);
         btnBack = (Button) findViewById(R.id.backBTN);
         txtFileName = (TextView) findViewById(R.id.txtFileName);
+        txtWarningMessage = (TextView) findViewById(R.id.txtWarningMessages);
 
-        btnShare.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnBack.setOnClickListener(this);
 
         Intent oldIntent = getIntent();
         Bundle myBundle = oldIntent.getExtras();
+        txtWarningMessage.setText("Warning! You are dying"); //TODO messages passed in myBundle extracted and put here, if no message leave as empty string
         String fileName = myBundle.getString("fileName");
         txtFileName.setText("File: " + fileName);
         myFileInfo = myFileHelper.loadFile(fileName, this);
-        for (int i = 0; i < myFileInfo.size(); i++) {
-            dataValueSeries.appendData(new DataPoint(i, myFileInfo.get(i)), false, myFileInfo.size() + 1);
+        if (myFileInfo != null) {
+            for (int i = 0; i < myFileInfo.size(); i++) {
+                dataValueSeries.appendData(new DataPoint(i, myFileInfo.get(i)), false, myFileInfo.size() + 1);
+            }
         }
     }
 
@@ -99,23 +102,18 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.backBTN:
-                android.os.Process.killProcess(android.os.Process.myPid());
+                if (!fileSaved) {
+                    Intent oldIntent = getIntent();
+                    Bundle myBundle = oldIntent.getExtras();
+                    String fileName = myBundle.getString("fileName");
+                    if (myFileHelper.deleteFile(fileName, getApplicationContext())) {
+                        Toast.makeText(getApplicationContext(), "File Deleted", Toast.LENGTH_LONG).show();
+                    }
+                }
+                startActivity(new Intent(DisplayECG.this, MainActivity.class));
                 break;
-            case R.id.shareBTN:
-                Intent oldIntent = getIntent();
-                Bundle myBundle = oldIntent.getExtras();
-
-                String fileName = myBundle.getString("fileName");
-                File F = new File(this.getFilesDir(), fileName);
-                Uri U = FileProvider.getUriForFile(this, "com.package.name.fileprovider", F);
-
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.setDataAndType(U, "text/csv");
-                intent.putExtra(Intent.EXTRA_STREAM, U);
-                startActivity(Intent.createChooser(intent, "Choose sharing method"));
-
-                Toast.makeText(this, "Email sent", Toast.LENGTH_LONG).show();
+            case R.id.storeBTN:
+                fileSaved = true;
                 break;
             case R.id.deleteBTN:
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -128,7 +126,7 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
                                 String fileName = myBundle.getString("fileName");
                                 if (myFileHelper.deleteFile(fileName, getApplicationContext())) {
                                     Toast.makeText(getApplicationContext(), "File Deleted", Toast.LENGTH_LONG).show();
-                                    android.os.Process.killProcess(android.os.Process.myPid());
+                                    startActivity(new Intent(DisplayECG.this, MainActivity.class));
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Unable to delete file", Toast.LENGTH_LONG).show();
                                 }
@@ -145,24 +143,5 @@ public class ViewRecording extends ActionBarActivity implements View.OnClickList
                         .setNegativeButton("No", dialogClickListener).show();
                 break;
         }
-    }
-
-    public void shareText(View view) {
-        String FILE = Environment.getExternalStorageDirectory() + File.separator
-                + "Foldername";
-
-        Intent oldIntent = getIntent();
-        Bundle myBundle = oldIntent.getExtras();
-        String fileName = myBundle.getString("fileName");
-
-        String temp_path = FILE + "/" + "Filename.csv";
-        File F = new File(temp_path);
-        Uri U = Uri.fromFile(F);
-
-        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, fileName);
-        intent.putExtra(Intent.EXTRA_STREAM, U);
-        startActivity(Intent.createChooser(intent, "Choose sharing method"));
     }
 }

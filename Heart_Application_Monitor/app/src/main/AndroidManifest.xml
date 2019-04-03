@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.und.cs.com.heart_monitor" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="edu.und.cs.com.heart_monitor">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -27,8 +29,15 @@
         <activity
             android:name=".ECG"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_ecg" >
-        </activity>
+            android:label="@string/title_activity_ecg"></activity>
+        <activity
+            android:name=".AnalyzeECG"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_analyze_ecg"></activity>
+        <activity
+            android:name=".DisplayECG"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_display_ecg"></activity>
         <activity
             android:name=".UserData"
             android:screenOrientation="portrait"
@@ -48,6 +57,18 @@
             android:name=".PrefUser"
             android:label="@string/title_activity_pref_user" >
         </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.package.name.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource" />
+        </provider>
     </application>
 
 </manifest>
