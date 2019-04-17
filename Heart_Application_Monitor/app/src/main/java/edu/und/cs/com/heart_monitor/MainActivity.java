@@ -29,7 +29,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
 
@@ -221,20 +223,33 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public static class TFragment  extends Fragment implements  AdapterView.OnItemClickListener {
         ListView reportsList;                                                                //reference to listview that contains recorded ECG sessions
         ArrayList<String> fileNames = new ArrayList();                                       //stores names of current files in internal directory
-        ArrayAdapter myArrayAdapter;                                                         //allows ListView object to me updated using information gathered
+        ArrayAdapter myArrayAdapter;
+        String[] filesList;                                                                    //used to store list of internal files
 
         @Override
         public View onCreateView( LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
             final View rootView = inflater.inflate(R.layout.fragment_start_test, container, false);
-            fileNames.clear();
+            /*fileNames.clear();
             myArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,android.R.id.text1, fileNames);
             reportsList = (ListView) rootView.findViewById(R.id.lstvFiles);
             reportsList.setOnItemClickListener(this);
             //fileNames.add("Sample1-Filtered-Extended.txt");
             fileNames.add("Sample2-Unfiltered-Extended.txt");
-            fileNames.add("Sample2-Filtered-Extended.txt");
-            reportsList.setAdapter(myArrayAdapter);
+            fileNames.add("Sample2-Filtered-Extended.txt");*/
+            fileNames.clear();
+            myArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, fileNames);
+            reportsList = (ListView) rootView.findViewById(R.id.lstvFiles);
+            reportsList.setOnItemClickListener(this);
 
+            try {
+                filesList = getActivity().getApplicationContext().getAssets().list("samples");                  //retrieve reference internal file directory
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (filesList != null) {
+                fileNames.addAll(Arrays.asList(filesList));
+            }
+            reportsList.setAdapter(myArrayAdapter);                                         //assign an ArrayAdapter to UI ListView
             return rootView;
         }
 

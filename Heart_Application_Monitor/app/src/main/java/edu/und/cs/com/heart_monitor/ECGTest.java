@@ -3,7 +3,6 @@ package edu.und.cs.com.heart_monitor;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -44,23 +43,17 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
         myGraphView.getViewport().setXAxisBoundsManual(true);
         myGraphView.getViewport().setYAxisBoundsManual(true);
         myGraphView.getViewport().setMinX(0);
-        myGraphView.getViewport().setMaxX(1000);
-        myGraphView.getViewport().setMaxY(150);
-        myGraphView.getViewport().setMinY(-100);
+        myGraphView.getViewport().setMaxX(2000);
+        myGraphView.getViewport().setMaxY(1000);
+        myGraphView.getViewport().setMinY(100);
         myGraphView.getViewport().setScrollable(true);
         myGraphView.getViewport().setScrollableY(true);
         myGraphView.getViewport().setScalable(true);
 
         //Find the buttons by their ID
-        final Button startButton = (Button) findViewById(R.id.startBTN);
-        final Button stopButton = (Button) findViewById(R.id.stopBTN);
-        final Button fileButton = (Button) findViewById(R.id.fileBTN);
         final Button backButton = (Button) findViewById(R.id.backBTN);
 
         //Listen for button presses
-        startButton.setOnClickListener(this);
-        stopButton.setOnClickListener(this);
-        fileButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
 
         Intent oldIntent = getIntent();
@@ -93,49 +86,11 @@ public class ECGTest extends RoboActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.startBTN:
-                onStartButton();
-                break;
-            case R.id.stopBTN:
-                onStopButton();
-                break;
-            case R.id.fileBTN:
-                onFileButton();
-                break;
             case R.id.backBTN:
                 onBackButton();
                 break;
         }
     }
-
-    /**
-     * Button to start the test was pressed.
-     */
-    private void onStartButton() {
-
-    }
-
-    /**
-     * Button to stop the test was pressed.
-     */
-    private void onStopButton() {
-        //isAsyncTaskCancelled = true;
-    }
-
-    /**
-     * Button to chose a file was pressed.
-     */
-    private void onFileButton() {
-
-        try {
-            AssetManager mnger = getAssets();
-            InputStream stream = mnger.open("samples/Sample1-Filtered.txt");
-        }
-        catch(Exception e) {
-            Log.d("TAG", e.getMessage());
-        }
-    }
-
 
     /**
      * Button to go back was pressed.

@@ -12,8 +12,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="154dp"
-        android:id="@+id/graphLayout"
+        android:layout_height="196dp"
+        android:layout_weight="0.24"
         android:background="#ffffff"
         android:layout_marginTop="20dp">
 
@@ -24,37 +24,20 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/file_name_holder"
+        android:id="@+id/txtFileName"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="15dp" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="25dp">
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/start_button"
-            android:id="@+id/startBTN"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            tools:text="Start" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/stop_button"
-            android:id="@+id/stopBTN"
-            android:layout_marginBottom="10dp" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/chose_file_button"
-            android:id="@+id/fileBTN"
-            android:layout_marginBottom="10dp"
-            tools:text="Select File" />
+        android:layout_marginBottom="100dp">
 
         <Button
             android:layout_width="fill_parent"

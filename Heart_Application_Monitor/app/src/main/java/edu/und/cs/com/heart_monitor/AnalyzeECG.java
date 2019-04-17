@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import roboguice.activity.RoboActivity;
 
@@ -62,7 +63,7 @@ public class AnalyzeECG extends RoboActivity implements View.OnClickListener {
         protected Void doInBackground(Void... paramses) {
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -79,7 +80,7 @@ public class AnalyzeECG extends RoboActivity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(Void result) {
-            //TODO toast showing done with analyzing
+            Toast.makeText(AnalyzeECG.this, "Finished analyzing. Redirecting you.", Toast.LENGTH_LONG).show();
             Bundle myBundle = new Bundle();                                                 //Bundle fileName to send to ViewRecording Activity
             myBundle.putString("fileName", newFileName);
             Intent newIntent = new Intent(getApplicationContext(), DisplayECG.class);

@@ -103,45 +103,46 @@ public class DisplayECG extends ActionBarActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.backBTN:
                 if (!fileSaved) {
-                    Intent oldIntent = getIntent();
-                    Bundle myBundle = oldIntent.getExtras();
-                    String fileName = myBundle.getString("fileName");
-                    if (myFileHelper.deleteFile(fileName, getApplicationContext())) {
-                        Toast.makeText(getApplicationContext(), "File Deleted", Toast.LENGTH_LONG).show();
-                    }
+                    deleteFile();
+                } else {
+                    startActivity(new Intent(DisplayECG.this, MainActivity.class));
                 }
-                startActivity(new Intent(DisplayECG.this, MainActivity.class));
                 break;
             case R.id.storeBTN:
                 fileSaved = true;
+                Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_LONG).show();
                 break;
             case R.id.deleteBTN:
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int choice) {
-                        switch (choice) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                Intent oldIntent = getIntent();
-                                Bundle myBundle = oldIntent.getExtras();
-                                String fileName = myBundle.getString("fileName");
-                                if (myFileHelper.deleteFile(fileName, getApplicationContext())) {
-                                    Toast.makeText(getApplicationContext(), "File Deleted", Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(DisplayECG.this, MainActivity.class));
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Unable to delete file", Toast.LENGTH_LONG).show();
-                                }
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                break;
-                        }
-                    }
-                };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Delete this file?")
-                        .setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                deleteFile();
                 break;
         }
+    }
+
+    private void deleteFile() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Intent oldIntent = getIntent();
+                        Bundle myBundle = oldIntent.getExtras();
+                        String fileName = myBundle.getString("fileName");
+                        if (myFileHelper.deleteFile(fileName, getApplicationContext())) {
+                            Toast.makeText(getApplicationContext(), "File Deleted", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(DisplayECG.this, MainActivity.class));
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Unable to delete file", Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete this file?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 }
