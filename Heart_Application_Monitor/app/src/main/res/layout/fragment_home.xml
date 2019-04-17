@@ -77,7 +77,7 @@
             <TextView
                 android:layout_width="308dp"
                 android:layout_height="wrap_content"
-                android:text="To start the ECG capture press the button below. Swipe to the right or click the buttons below to go to view reports, see the tutorial, etc. "
+                android:text="To capture the ECG capture press the button below. Then press start. Swipe to the right or click the buttons below to go to view reports, see the tutorial, etc. "
                 android:id="@+id/textView"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="25dp"
