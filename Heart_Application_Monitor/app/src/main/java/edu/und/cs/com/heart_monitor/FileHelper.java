@@ -39,6 +39,19 @@ public class FileHelper {
         }
     }
 
+    public void startFilteredFile(FileHelper myFileHelper, Context ctx, String OgFileName) {
+
+        String tempFileName = (OgFileName + ".csv");     //combine date and time info into string for file name
+        myFileHelper.fileName = tempFileName;
+        try {
+            FileOutputStream fOut = ctx.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+            myFileHelper.fileOutputStream = fOut;
+            //Toast.makeText(ctx, "File" + tempFileName + " opened ", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            //Toast.makeText(ctx, "There was a problem opening the file", Toast.LENGTH_LONG).show();
+        }
+    }
+
     //Gets FileOutputStream from FileHeler object and writes current cur_x and fileY value to the file on their own line
     public void appendFile(FileHelper myFileHelper, int xValue, int yValue, Context ctx){
         String contents = xValue + "," + yValue + "\n";         //place and and fileY value on their own line in ouptut file

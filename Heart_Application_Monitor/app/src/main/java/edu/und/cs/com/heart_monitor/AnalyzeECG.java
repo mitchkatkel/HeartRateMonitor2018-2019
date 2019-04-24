@@ -19,6 +19,7 @@ public class AnalyzeECG extends RoboActivity implements View.OnClickListener {
     private AsyncTask myThread;
     private FileHelper myFileHelperIn;
     private FileHelper myFileHelperOut;
+    private QRSFilter filter = new QRSFilter();
 
 
     @Override
@@ -70,8 +71,7 @@ public class AnalyzeECG extends RoboActivity implements View.OnClickListener {
             //run filter
 
             //assign the new file and delete the temp file
-            newFileName = myFileHelperOut.fileName;
-            newFileName = fileName; //TODO temp until filter added and new file is created
+            newFileName = filter.runQRSFIlter(myFileHelperOut.fileName, getApplicationContext());
 
             //check for issues
 
