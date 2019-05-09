@@ -17,9 +17,9 @@ public class AnalyzeECG extends RoboActivity implements View.OnClickListener {
     private String fileName;
     private String newFileName;
     private AsyncTask myThread;
-    private FileHelper myFileHelperIn;
-    private FileHelper myFileHelperOut;
-    private QRSFilter filter = new QRSFilter();
+    private QRSFilter filter;
+    private AnomalyDetection detection;
+
 
 
     @Override
@@ -36,8 +36,8 @@ public class AnalyzeECG extends RoboActivity implements View.OnClickListener {
         Bundle oldBundle = oldIntent.getExtras();
         fileName = oldBundle.getString("fileName");
 
-        myFileHelperIn = new FileHelper();
-        myFileHelperOut = new FileHelper();
+        filter = new QRSFilter();
+        detection = new AnomalyDetection();
 
         myThread = new TestAsyncTask().execute();
     }
@@ -69,11 +69,17 @@ public class AnalyzeECG extends RoboActivity implements View.OnClickListener {
                 e.printStackTrace();
             }
             //run filter
-
             //assign the new file and delete the temp file
-            newFileName = filter.runQRSFIlter(myFileHelperOut.fileName, getApplicationContext());
+            //TODO filtering currently crashes, additionally is cancels out a lot of the QRS complex so it is debatable if it is what is actually needed
+            //newFileName = filter.runQRSFIlter(myFileHelperOut.fileName, getApplicationContext());
+
+            //TODO temp until filter system works
+            newFileName = fileName;
 
             //check for issues
+            //TODO skeleton file for anomaly detection
+            //detection.Detect(newFileName);
+
 
             return null;
         }
